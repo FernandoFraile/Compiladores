@@ -1,0 +1,185 @@
+-------DIA 1------
+
+Solo vamos a analizar regression.d Si hay numeros hexadecimales, hay que analizar todos los numeros hexadecimales del lenguaje, es deccir, hay que hacerlo
+de forma genérica. 
+
+Bloque análisis léxico: lexico.c, coge los datos de regression.d. 
+
+OJO: el último carácter es el fin de fichero. Es necesario para que el analizador léxico funcione. 
+En este caso tenemos un programa en alfabeto ASCII. Vamos a programar un compilador que en principio no hay sistema de entrada. 
+El resultado del analizador léxico es la traducción a componentes léxicos. 
+
+El analizador léxico tiene que tener una función que sea siguiente.componente.lexico() y este le devuelve el componente léxico. En este caso el sintáctico
+lo único que hace es imprimir por pantalla. Se acaba cuando el siguiente.componente.léxico envíe un componente léxico fin de fichero. Se propaga por todo 
+el compilador. 
+
+Estándar para imprimir los ficheros: <300,"import">
+
+
+Componente léxico: símbolo terminal del lenguaje de programación. Cada componente léxico es un número entero, el cual interpreta el analizador sintáctico. 
+
+Puedo tener un fichero definicion.h. Si pongo #define IMPORT 300 , el compilador sustituye el import por 300, antes de compilar. Cuando el analizador léxico, 
+que funciona con autómatas, detecta un import, le envía un 300 al analizador sintáctico. El analizador léxico debe devolver una estrucutura, con un entero 
+y un string, reservador dinamicamente. Hay que declarar el string como un puntero a char. 
+
+OJO: el salto de línea en lenguaje D no es un componente léxico, a diferencia de python. 
+
+Cuando se lee std.stdio es mejor separarlo, para que por ejemplo, si pongo mal stdio se indique que ese es el paquete que está mal y no todo. 
+Std es un identificador (nombre).
+
+Tiene que haber un autómata que reconozca las palabras reservadas. Tiene que detectar letras, hasta tener otra cosa que una letra. 
+Para el autómata de los identificadores, tiene que detectar primero una letra (solo pueden empezar por una letra). 
+
+
+Ejemplo: 
+
+Definiciones.h: 
+	#define import 300
+	#define ID 301
+	El punto no hay que definirlo, porque ya hay código ascii para el punto (46)
+	
+Imprimir: 
+	<300,"import">
+	<301,"std"> Lee hasta el punto, el alfanumérico lo acepta y se va a la tabla de símbolos. Lo pone en la tabla 
+	<46,".">
+	<301,"stdio">	El std se diferencia del stdio a través de la tabla de símbolos. OJO, el análisis sintáctico no necesita diferenciar std y stdio
+				por lo que no accede a la tabla de símbolos, esto sería en la estapa de análisis semántico. 
+	
+	
+Tabla de símbolos: Tiene que tener un archivo .c y .h. 
+ El analizador léxico le pregunta a la tabla de símbolos, con una función buscar. Le manda "import" y la tabla le devuelve 300 (IMPORT). 
+Luego el analizador léxico se lo envía al analizador sintáctico. Esto supone el problema de que la tabla de símbolos tiene que tener las palabras reservadas. 
+Se puede cargar desde un fichero con dos columnas, aunque hace que el compilador siempre necesite el fichero. Una solución es meterlo en un array, 
+se lee con un bucle y se mete en la tabla de símbolos. Tiene que haber una función de inserción en la tabla de símbolos. Si se mete en la tabla de símbolos, 
+se mete en el .c . El main invoca a una función que inicializa la tabla. Se utiliza el paradigma orientado a objetos, invocando la función del .h de la tabla 
+de símbolos, y esta ejecuta el .c . 
+
+
+		IMPORT		"import"
+		ID		"std"
+		El . no se mete en la tabla, ni símbolos, números etc
+		ID		"stdio"
+		
+		
+Main.c : inicializa, llama al analizador sintáctico, y luego limpia (con el clean). 
+
+
+------DIA 2------
+			
+	
+En la tabla de símbolos no hay que implementar estructuras de bloque. Se tratan todos como pertenecientes a un único bloque, y se borran al final de todo. 
+Los símbolos se añaden en cuanto aparecen. No se hace lo de los bloques pq necesitaríamos una gramática y eso se hace en el analizador sintáctico, y esta 
+práctica va dirigida a analizador léxico. 
+
+Siguiente.componente.léxico tiene que tener un while hasta fin de fichero. Cuando acaba lo envía al analizador sintáctica. El analizador léxico reconoce 
+el lenguaje a través de un autómata. 
+
+Un identificador es una cadena de caracteres que empieza por una letra, _ o un número (sacado de la documentación). Se lee hasta que detecte un carácter 
+distinto de este. La función isalpha e isalnum para ver qué es. 
+
+Programar autómata: se piden caracteres hasta que llegue uno que no es alphanumerico. Para ir de un estado a otro puedo usar un switch. El autómata que 
+reconoce las palabras reservadas es el mismo que el que reconoce los identificadores, se diferencia con la tabla de símbolos. Cuando llega a un espacio 
+en blanco, acepta la cadena leída. Después lee y acepta std (no std.) , va a la tabla de símbolos y ve que no está, y lo mete. 
+
+	Tabla símbolos: 	IMPORT  "import"
+				ID	"std"
+				
+	Fichero de definiciones: 	#define IMPORT	300
+					#define ID	301
+
+	
+Se separan los autómatas en distintas funciones, uno para las letras, uno para números etc. Se puede hacer porque cada lexema empieza por algo distinto
+(a excepción de =, que puede ser == o +, etc, pero eso se puede resolver). Cuando el autómata acaba hace un return del componente léxico. 
+Para reconocer los comentarios, no es un lenguane regular, ya que tiene que haber el mismo número de /+ que de +/. Hace falta una GIC. Hace falta una 
+función que sume cuando aparezca un /+ y reste cuando aparece un +/.
+
+"\"Slope\": %f": es un lenguaje regular, porque las comillas hay que escaparlas, y no hay que contarlas. 
+
+
+0b0x1: 0b es un prefijo binario, indica que lo que viene a continuación. Cuando lee 0x, la x no es un elemento binario, por lo que da un error. 
+Hay 2 formas de reconocer el error, una en el analizador léxico, y otra en el analizador sintáctico. Si se hace en el analizador sintáctico es fácil, porque 
+se reconoce un binario, luego un identificador y luego un número, se le manda al sintáctico, y este ve que un binario no puede ir seguido de un
+identificador, por lo que da un error. 
+Autómata de letras y numeros: acaba cuando en el siguiente no es uno de ellos. En este hay que devolver cada caracter para leer el siguiente. 
+Autómata de strings: acaba cuando se llega a unas comillas
+
+Meter en un zip y y no ponerle nuestro nombre. 
+
+
+----DIA 3-----
+
+Primero se inicializa las estrucutras de datos desde el main, se abre el fichero etc. Luego se llama a análisis sintáctico, que pide componentes léxicos. 
+Cuando acaba, devuelve el control al main, y este limpia toda la memoria (con valgreen se comprueba como está esta?). 
+
+Sistema de entrada: tendrá un fichero .c y .h. Tendrá una función siguiente.caracter que invoca el analizador léxico, y le devuelve el caracter. Finaliza 
+cuando el sistema de entrada le devuelve el caracter fin de fichero al analizador léxico, y este le devuelve el componente léxico de fin de fichero 
+al analizador sintáctico. 
+
+En el sistema de entrada hay que utilizar un doble centinela. Este consta de 2 bloques, de igual tamaño, que albergan cacteres, y al final tienen un fin 
+de fichero. Puede haber hasta 3 fin de fichero, los de los bloques y el de fichero de entrada. Primero cargamos el bloque A, lo leemos cuando llegamos al 
+EOF, y pasamos al B, luego al A... El tamaño máximo del lexema es n (sin el EOF). 
+
+Para programar el sistema de entrada: se puede usar un array físico que se divide en 2 lógicos. Se hacen con memoria estática con el tamaño máximo posible 
+para un lexema. Le metemos un EOF a final de cada bloque. Supongamos que el tamaño es 6: 
+
+	A->  i|m|p|o|r|t|EOF 	B->EspacioBlanco | s| t| d| .| s|EOF
+						puntero
+						Inicio
+
+Para leer los caracteres se puede usar fread, que le indico el tamaño máximo a leer, y para la siguiente lectura queda el puntero apuntando al siguiente. 
+Después de cargar los 6, se mete el fin de fichero, que solo se mete al rellenar el bloque por primera vez. El sistema centinela funciona con dos punteros, 
+uno inicio y otro delantero (fin).Primero se ponen los dos punteros en la i de import, y este punto es en el que el analizador léxico invoca a 
+siguiente.caracter, que devuelve un caracter, y luego mueve el puntero delantero a la m . Cuando al analizador léxico le llega la i, mira a qué autómata 
+lo tiene que mandar (función cadenas alfanuméricas), que reconoce el caracter, se pone en el primer estado, y pide otro caracter. Cuando le manda la m, ya 
+está en la función de cadenas alfanuméricas, y lo reconoce, pasa al segundo estado, y pide otro carácter. Cuando llega a EOF, se carga el bloque B con una 
+función que cargue el siguiente bloque (tiene que valer también para cargar el A). Se pone un espacio en blanco y std.s . AAhora continuación, se mueve el 
+puntero, y le devuelve el espacio en blanco al analizador léxico. Cuando le llega, el autómata acepta la cadena import, le pregunta a la tabla de simbolos
+qué es, le dice que su valor es 300, y este se lo manda al analizador sintáctico con el valor y el lexema, para imprimirlo. 
+
+Cada vez que ejecutamos la función siguiente.caracter , si el caracter es EOF, se pasa al siguiente bloque, si no se devuelve el caracter. Además, si estoy 
+en EOF, se ve si estoy en el fin de bloque A o B, para ver si son esos o el EOF del archivo de entrada. Así solo hacemos solo una comprobación por carácter, 
+más la comprobación cuando se llegue a EOF. 
+
+Ojo, el puntero de inicio tiene que situarse en el principio del lexema. El autómata tiene que decirle al sistema de entrada si acaba en el último 
+caracter o en el caracter siguiente. Si acaba en el siguiente, tiene que decirle al puntero delantero que vuelva para atrás para luego ir a siguiente. 
+Esto ocurre por ejemplo con std. que acaba en el ".". 
+
+		 Delantero
+	A->  | | |3|0|5|EOF 	B-> ; |  |a |= | b|+ |EOF
+		 Puntero
+		 Inicio
+		 
+Aquí cuando llega el puntero delantero al ";", lo devuelve, y el autómata de número acepta, le dice al sistema de entrada que vuelva el delantero a la 
+posición anterior? NO, porque si no va a detectar que se tiene que cargar el bloque B otra vez, y se van a perder datos. Qué se hace? Porque esta solución 
+igual no falla si el bloque A es muy grande, pero en este caso es del tamaño del lexema. Por lo que, qué significa retroceder? Hay que pensarlo. 
+
+Cuantas copias hay cuando se carga import? 4, una en el sistema de entrda, 2 en los 2 analizadores y otra en la tabla de símbolos. Pero se puede hacer con 
+2, en el analizador sintáctico con el puntero al analizador léxico puede obtener la cadena. Y en el analizador léxico tampoco lo necesita, le puede pedir 
+al sistema de entrada lo que hay entre inicio y fin del autómata. Pero inicio y fin puede ir en bloque A o B, y hay que gestionar las 4 posibilidades de 
+posicionamiento de estos en los bloques. 
+
+En el analizador léxico se guarda en un string, con memoria dinámica?
+
+OJO: si el tamaño del lexema supera el tamaño máximo, hay que proporcionar un error, porque puede ser que al cargar el bloque A y B, puede ser que al volver 
+a cargar A se borre parte del lexema. Una posibilidad es que cuando lleguemos al EOF del B, si el puntero de inicio está en el A, es un error (proporcionado
+en el sistema de errores). Pero esta solución no es buena, porque aunque sea un lexema más grande, puede ser que el inicio esté en el bloque B. Por lo que 
+la mejor solución va a ser decirle el tamaño del bloque, y si excede, error e fora. Esto se hace viendo si al leer un caracter se excede el tamaño de 
+bloque. 
+
+Qué pasa si hay un error? Se siguen analizando los caracteres en el automata, pero como ha habido un error, el sistema de entrada se lo dice al analizador 
+lexico, por ejemplo, con una variable de estado en siguiente.caracter, y este ya no lo compara con la tabla de simbolos. 
+Otra opcion es enviarle los primeros n caracteres de la cadena que excede, y seguir en el sistema de entrada hasta que se acabe el lexema que excede. 
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
