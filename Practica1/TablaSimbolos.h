@@ -17,5 +17,7 @@ void insertarTabla(lexema *lex);
 void inicializarTablaSimbolos(); //Devuelve un EXIT_FAILURE en caso de error, EXIT_SUCCESS en caso de exito
 //Funcion para imprimir lo que hay en la tabla de simbolos
 void verTabla();
+//Funcion para liberar la memoria de la tabla de simbolos
+void liberarTablaSimbolos();
 
 #endif //PRACTICA1_TABLASIMBOLOS_H

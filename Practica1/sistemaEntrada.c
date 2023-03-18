@@ -19,6 +19,7 @@ bool cargar; //Variable para saber si tiene que cargar el sigueinte bloque. Se p
 
 char cargarBloque(){
 
+    int n; //Bytes
     //OJO: Si el tamanho del lexema excede el tamaño de bloque, se comprobará en el analizador léxico
 
     //Primero se comprueba si el fichero esta abierto correctamente
@@ -29,8 +30,10 @@ char cargarBloque(){
     //Dependiendo de donde esté el puntero siguiente, se carga el bloque A o B del centinela
     if(siguiente==0 || siguiente==2*MAX_LEXEMA+1){ //Cargar Bloque A
         //La primera comprobacion es por si es la primera llamada a la funcion, y la segunda por si se ha llegado al final del bloque B
-        fread((char *) centinela, sizeof(char), MAX_LEXEMA, fp);
-
+        n=fread((char *) centinela, sizeof(char), MAX_LEXEMA, fp);
+        if(feof(fp)){ //Cuando se llega al final del archivo
+            centinela[n]=EOF;
+        }
         if(ferror(fp)){
             errorSistema(strerror(errno));
         }
@@ -38,7 +41,10 @@ char cargarBloque(){
 
     }
     else if(siguiente==MAX_LEXEMA){ //Cargar Bloque B
-        fread((char *) centinela+MAX_LEXEMA+1, sizeof(char), MAX_LEXEMA, fp);
+        n=fread((char *) centinela+MAX_LEXEMA+1, sizeof(char), MAX_LEXEMA, fp);
+        if(feof(fp)){ //Cuando se llega al final del archivo
+            centinela[n+MAX_LEXEMA]=EOF;
+        }
         if(ferror(fp)){
             errorSistema(strerror(errno));
         }
@@ -113,14 +119,18 @@ char saltarCaracter(){
 void retroceder(bool err){
     //Se comprueba donde está el puntero siguiente
     if(siguiente==0 || siguiente==MAX_LEXEMA){  //En esta situacion esta justo antes de un EOF
-        cargar=false; //Se pone a false para que no se cargue el siguiente bloque cuando se invoque a siguiente cacracter
-
+        cargar=false; //Se pone a false para que no se cargue el siguiente bloque 2 veces, cuando se invoque a siguiente cacracter
+        cargarBloque();
     }
     siguiente--; //Se retrocede el puntero siguiente
     if(err==true){ //Gestion de casos de error
         inicio=siguiente; //Se pone el puntero inicio al mismo sitio que el puntero siguiente
     }
 
+}
+
+void aceptarComentario(){
+    _lexemaReconocido(); //Solo cambia el puntero de inicio
 }
 
 void aceptarLexema(lexema *lex){
@@ -208,7 +218,7 @@ int obtenerLineaYPalabra(char *palabra){
 
 
 
-int inicializarCentinela(){
+int inicializarCentinela(char *nombreFichero){
 
     centinela[MAX_LEXEMA] = EOF; //Se pone el EOF en la ultima posicion del primer bloque
     centinela[2*MAX_LEXEMA+1] = EOF;   //Se pone el EOF en la ultima posicion del segundo bloque
@@ -223,7 +233,7 @@ int inicializarCentinela(){
     cargar=true; //Se inicializa a true para que se cargue los bloques
 
     //Se lee el fichero de entrada, abriendolo en modo lectura y leyendolo con fread para mantener el puntero
-    fp=fopen("../regression.d","r");
+    fp=fopen(nombreFichero,"r");
     if(fp==NULL){
         errorSistema(strerror(errno));
     }
@@ -237,12 +247,13 @@ int inicializarCentinela(){
 }
 
 
-void cerrarSistemaEntrada(){
+void finalizarSistemaEntrada(){
     //Se cierra el fichero
-    fclose(fp);
-    if(ferror(fp)){
-        errorSistema(strerror(errno));
+    if(fp!=NULL){
+        fclose(fp);
+
     }
+
 
 
 }

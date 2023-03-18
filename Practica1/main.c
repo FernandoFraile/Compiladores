@@ -1,7 +1,5 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <errno.h>
+
 
 #include "analizadorLexico.h"
 #include "analizadorSintactico.h"
@@ -16,11 +14,18 @@ int main(int argc, char **argv) {
     inicializarTablaSimbolos(); //Se inicializa la tabla de símbolos
     verTabla();
 
-    //Se inicializa el sistema de entrada
-    inicializarAnalizadorLexico(); //Se inicializa el sistema de entrada
+    //Se inicializa el analizador lexico, qye ya inicializa el sistema de entrada
+    inicializarAnalizadorLexico("../regression.d"); //Se inicializa el sistema de entrada
 
     //Se invoca al analizador sintáctico
     analizadorSintactico();
+
+    //Se ve como ha quedado la tabla de simbolos
+    //verTabla();
+
+    //Se liberan los recursos
+    liberarTablaSimbolos();
+    finalizarAnalizadorLexico();
 
 
 

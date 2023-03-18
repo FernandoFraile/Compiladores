@@ -9,7 +9,8 @@
 TablaHash Tabla; //Tabla de símbolos implementada con una tabla Hash
 lexema estructura;  //Estructura requerida para insertar en la tabla Hash
 //short contador; //Contador para saber que valor asignar al siguiente elemento que entre en la tabla de simbolos
-#define TAM 30 //Tamanho de las lineas del fichero
+#define TAMTAB  79 //Tamanho de las lineas del fichero
+#define TAMLEX 30 //Tamanho del lexema
 
 void inicializarTablaSimbolos(){
     FILE *fp;
@@ -19,18 +20,31 @@ void inicializarTablaSimbolos(){
     short argumentos; //Variable para almacenar el numero de argumentos leidos en sscanf
 
 
-    char linea[TAM]; //Para leer las lineas del fichero
+    char *linea=NULL; //Para leer las lineas del fichero
 
 
-    //Hay que inicializar el componente lexico
+    //Hay que inicializar el componente lexico y la linea para leer el fichero
     LEX.clave = (char*) malloc ((64)*sizeof(char));
+    if(LEX.clave == NULL){
+        errorSistema(strerror(errno));
+    }
+    linea = (char*) malloc ((TAMLEX)*sizeof(char));
+    if(linea == NULL){
+        errorSistema(strerror(errno));
+    }
 
-
-    aux = (char*) malloc ((TAM)*sizeof(char));
+    aux = (char*) malloc ((TAMLEX)*sizeof(char));
     if(aux == NULL){
         errorSistema(strerror(errno));
     }
     //Se crea la estrucutra para la tabla de simbolos
+    Tabla= NULL; //Se inicializa a NULL
+    Tabla = (TablaHash) malloc (TAMTAB*sizeof(lexema));
+    if(Tabla == NULL){
+        errorSistema(strerror(errno));
+    }
+
+
     InicializarTablaHash(Tabla);
 
     //Hay que leer el archivo de definiciones. Primero realizo distintas comprobaciones
@@ -39,13 +53,13 @@ void inicializarTablaSimbolos(){
     if (fp == NULL) {
         errorSistema(strerror(errno));
     }
-    if(fgetc(fp)==EOF){
+    if(feof(fp)){
         errorSistema("Error: el archivo de definiciones esta vacio");
     }
 
 
     //Se empieza a leer el archivo
-    while (fgets(linea, sizeof(linea), fp) != NULL) {
+    while (fgets(linea, TAMLEX, fp) != NULL) {
         argumentos=sscanf(linea,"#define %s %hd //%s",aux,&LEX.valor,LEX.clave);
         if(argumentos==3){
             InsertarHash(Tabla,LEX);
@@ -65,6 +79,9 @@ void inicializarTablaSimbolos(){
         free(aux);
         free(LEX.clave);
     }
+    if(linea!=NULL){
+        free(linea);
+    }
 
 
 }
@@ -83,5 +100,13 @@ void insertarTabla(lexema *lex){
 void verTabla(){
     printf("------TABLA SIMBOLOS--------\n");
     imprimirTabla(Tabla);
+}
+
+void liberarTablaSimbolos(){
+
+    BorrarTabla(Tabla);
+    if(Tabla!=NULL){
+        free(Tabla);
+    }
 }
 

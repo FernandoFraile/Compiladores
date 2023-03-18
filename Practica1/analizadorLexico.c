@@ -63,6 +63,9 @@ void _automataAlphanumerico(char c){
     } while (isalpha(c) || isalnum(c) || c=='_');
     retroceder(aux);
     if(aux==false){ //Si no ha habido errores de tamaño, se acepta el lexema
+        if(c=='a'){
+            printf("a");
+        }
         aceptarLexema(&lex);
         aceptado=true;
         //Se ve si esta en la tabla de simbolos, y si no se inroduce
@@ -78,29 +81,47 @@ void _automataAlphanumerico(char c){
 };
 
 
-
 void _automataComentariosBloque(){
     char c;
     bool correcto=false; //Para saber si se ha cerrado bien el comentario
     bool error=false; //Para saber si se ha producido un error
     int estado=0;
+    int anidados=1; //Para saber cuantos comentarios tienen que anidarse
+
     do{
-
         c=siguienteCaracter();
-        //Se lee hasta que se cierre bien un bloque
+        //Se lee hasta que se encuentra un */
+        // /* /* */ */ No se acepta, se le mandara dos componentes lexicos, * y /
+        // /* /* */  Se acepta
 
-        if(c=='*'){
-            c=siguienteCaracter();
-            if(c=='/'){
-                correcto=true;
-            }
+        switch (estado) {
+            case 0:
+                if (c == '*') {
+                    estado = 1;
+                }
+                break;
+            case 1:
+                if(c=='/'){
+
+                    correcto=true;
+                }
+                else{
+                    estado=0;
+                }
+                break;
+
         }
-        if(c==EOF){
+
+        if(c==EOF){ //Segun la especificacion, si no se cierra antes del EOF esta mal formado
             error=true;
-            errorLexicoComentario(obtenerLineaYPalabra(NULL),"de bloque");
-            retroceder(false);
+            errorLexicoComentario(obtenerLineaYPalabra(NULL),"bloque");
+            retroceder(true);
         }
+
+
+
     } while (correcto==false && error==false);
+
 }
 
 void _automataComentariosLinea(){
@@ -141,8 +162,9 @@ void _automataComentariosAnidados(){
                 if(c==EOF){
                     error=true;
                     errorLexicoComentario(obtenerLineaYPalabra(NULL),"de linea");
-                    retroceder(false);
-                }                break;
+                    retroceder(true);
+                }
+                break;
             case 1:
                 if (c == '/') {
                     if(anidados==1){ //En este caso solo quedaba uno por cerrar
@@ -166,10 +188,17 @@ void _automataComentariosAnidados(){
                 break;
 
         }
+        if(c==EOF){ //Segun la especificacion, si no se cierra antes del EOF esta mal formado
+            error=true;
+            errorLexicoComentario(obtenerLineaYPalabra(NULL),"anidado");
+            retroceder(true);
+        }
 
     }while(correcto==false && error==false);
 
 }
+
+
 
 
 void _automataComentarios(char c){
@@ -177,12 +206,15 @@ void _automataComentarios(char c){
     switch (c) {
         case '*':
             _automataComentariosBloque();
+            aceptarComentario();
             break;
         case '/':
             _automataComentariosLinea();
+            aceptarComentario();
             break;
         case '+':
             _automataComentariosAnidados();
+            aceptarComentario();
             break;
         default:
             errorSistema("Error interno del analizador lexico\n");
@@ -196,7 +228,9 @@ void _automataStrings(){
     char c;
     bool aux=false; //Para no hacer la cromprobacion de si los caracteres son mayores que el tamanho permitido mas de una vez
     bool error=false; //Para saber si se ha producido un error
+    int estado=0; //Estados del automata
     //Se lee hasta que se encuentre un "
+
     do{
         c=siguienteCaracter();
         caracteresLeidos++;
@@ -204,13 +238,38 @@ void _automataStrings(){
             aux = true;
             _errorTamaho();
         }
+        if(caracteresLeidos>maxlexema){
+            //Una vez se llega a este punto, se lee hasta que se encuentre un "
+            if(c=='"'){
+                aceptado=true;
+            }
+        }
         if(c==EOF){ //Si se llega a un EOF esta mal formado
             error=true;
             errorLexicoString(obtenerLineaYPalabra(NULL),"String mal formado (EOF)");
             retroceder(false);
         }
+        switch (estado) {
+            case 0:
+                if(c=='"'){
+                    aceptado=true;
+                    lex.valor=STRING;
+                }
+                if(c=='\\'){
+                    estado=1; //Puede ser que se escape un caracter de ", por lo que se va a un estado 1
+                }
+                break;
+            case 1:
+                estado=0; //Se vuelve al estado inicial. Este estado es solo para gestionar el " escapado
+                break;
+            default:
+                errorSistema("Error interno del analizador lexico\n");
+                break;
 
-    }while(c!='\"');
+
+        }
+
+    }while(aceptado==false && error==false);
     //En este caso no se retrocede, porque el lexema acaba en " , y no es necesario leerlo otra vez
     if(aux==false){ //Si no ha habido errores de tamaño, se acepta el lexema
         aceptarLexema(&lex);
@@ -226,80 +285,188 @@ void _automataStrings(){
 void _automataNumeros(char c){
 
     bool aux=false; //Para no hacer la cromprobacion de si los caracteres son mayores que el tamanho permitido mas de una vez
+    bool retr=true; //Para saber si se tiene que retroceder o no, ya que hay algunos numeros que no acaban en caracter siguiente
     //Se van a diferenciar los casos segun el primer caracter que llegue
-    int estado;
-    if(c=='0'){
-        estado=0; //Puede ser un numero entero,flotante,binario
-    }
-    else{
-        estado=1;
-    }
+    int estado =0;
+
     do{
-        c=siguienteCaracter();
-        caracteresLeidos++;
+
 
         switch (estado) {
             case 0:
                 switch (c) {
-                    case 'B':
-                    case 'b': //Si es un numero binario
-                        estado=1;
+                    case '0':
+                        estado=2; //Puede ser un numero entero,flotante,binario
                         break;
-                    case '.': //Si es un numero flotante
-                        estado=2;
-                        break;
-                    case 'e':
 
+                    default:
+                        estado=1; //Si no es un cero, se sigue la comprobacion para ver si es un flotante o un entero
+                        break;
+                }
+                break;
+            case 1:
+                switch (c) {
+                    case '.':
+                        estado=4; //Se comprueba si es un numero flotante
+                        break;
+                    case 'E':
+                    case 'e':
+                        estado=6; //Se comprueba si es un numero flotante
+                        break;
+                    case 'F':
+                    case 'f':
+                    case 'i':
+                    case 'L':
+                        //Si se indica una f o F al final, se acepta el lexema, siendo flotante
+                        aceptado=true;
+                        retr=false;
+                        lex.valor=FLOATING;
+                        break;
+                    case 'u':
+                    case 'U':
+
+                        //Si se indica una u o U al final, se acepta el lexema, siendo entero
+                        aceptado=true;
+                        retr=false;
+                        lex.valor=INTEGER;
                         break;
                     default:
-                        if(!isdigit(c)){ //Si no es uno de los casos descritos, es un entero
+                        if(!(isdigit(c) || c=='_')){ //Si es un numero o un guion bajo, se sigue leyendo
+                            aceptado=true; //Si no es ninguno de los casos anteriores, se acepta el lexema
+                            lex.valor=INTEGER;
+                        }
+                        break;
+                }
+                break;
+            case 2:
+                switch (c) {
+                    case 'B':
+                    case 'b': //Si es un numero binario
+                        estado=3;
+                        break;
+                    //Hay que incluir los casos del estado 1, ya que puede ser un 0f, por ejemplo
+                    case '.':
+                        estado=4; //Se comprueba si es un numero flotante
+                        break;
+                    case 'E':
+                    case 'e':
+                        estado=6; //Se comprueba si es un numero flotante
+                        break;
+                    case 'F':
+                    case 'f':
+                    case 'i':
+                    case 'L':
+                        //Si se indica una f o F al final, se acepta el lexema, siendo flotante
+                        aceptado=true;
+                        retr=false;
+                        lex.valor=FLOATING;
+                        break;
+                    case 'u':
+                    case 'U':
+
+                        //Si se indica una u o U al final, se acepta el lexema, siendo entero
+                        aceptado=true;
+                        retr=false;
+                        lex.valor=INTEGER;
+                        break;
+
+                    default:
+                        if(!(isdigit(c) || c=='_')){
                             aceptado=true;
                             lex.valor=INTEGER;
+                        }
+                        else{
+                            estado=1;  //Puede ser un entero o flotante en otro caso, por lo que se va al estado 1
 
                         }
-                        //Puede ser un entero o flotante en otro caso, por lo que sigue en el estado cero
+
                         break;
 
 
                 }
                 break;
-            case 1: //Si es un numero binario
+            case 3://Se comprueba si es un numero binario
                 //Ahora se comprueba si los caracteres leidos son binarios o no
-                if(c!='0' && c!='1'){
+                if(!(c=='0' || c=='1')){
                     aceptado=true; //Se acepta cuando ya no es un 1 o un 0
                     lex.valor=INTEGER;
                 }
 
-                break;
-            case 2:  //Si es un flotante
-                
 
+                break;
+            case 4: //Se comprueba si es un numero flotante
+                //En este punto, solo puede haber un numero, ya que se ha leido un .
+                if(!(isdigit(c) || c=='_')){//Si no es ese caso, se acepta el lexema, y el analizador sintactico ya se encargará de gestionar el error
+                    aceptado=true;
+                    lex.valor=FLOATING;
+                }
+                else{
+                    estado=5;
+                }
+
+
+
+                break;
+            case 5: //Estado intermedio porque puede combinarse un . con un e
+                if(c=='e' || c=='E'){
+                    estado=6;
+
+                }
+                else if(!(isdigit(c) || c=='_')){
+                    aceptado=true;
+                    lex.valor=FLOATING;
+                }
+                else{
+                    estado=5;
+
+                }
+                break;
+
+            case 6: //Se comprueba si es un numero flotante
+                //En este punto se ha leido un e o un E, por lo que se comprueba si a continuación hay un + o un -
+                if(c=='+' || c=='-'){
+                    estado=7;
+                }
+                else{ //Si no, se acepta el lexema
+                    aceptado=true;
+                    lex.valor=FLOATING;
+                }
+            break;
+            case 7: //Se comprueba si es un numero flotante
+                //Se siguen leyendo caracteres hasta que se acabe el numero flotante
+                if(!(isdigit(c) || c=='_')){
+                    aceptado=true;
+                    lex.valor=FLOATING;
+                }
+                break;
+            default:
+                errorSistema("Erro interno en el analizador lexico\n");
                 break;
 
         }
 
+        if(aceptado==false){ //Se comprueba debido a la construccion del bucle, para evitar leer un caracter de mas cuando
+                                //ya se ha aceptado la cadena
+            c=siguienteCaracter();
+            caracteresLeidos++;
+        }
+
+
     }while(aceptado==false);
 
-        retroceder(false);  //Si hay error, hay que decirselo a retroceder
+        if(retr) {
+            retroceder(false);  //Si hay error, hay que decirselo a retroceder
+        }
         aceptarLexema(&lex);
 
-    }
+
 
 }
 
-//----------Fin de funciones privadas--------
-
-void  inicializarAnalizadorLexico(){
-    aceptado=false;
-    //Se inicializan los valores del lexema(No se reserva memoria para el campo que almacenará el string porque esto lo hara
-    // el sistema de entrada, segun el tamaño de dicho string)
-    lex.valor=0;
-    lex.clave=NULL;
-    maxlexema=inicializarCentinela();
-}
-
-
-lexema siguiente_componente_lexico(){
+//Funcion privada para realizar el automata
+//Se implementa en dos pasos, una privada y la pública, para que si el lexema está a NULL, no se devuelva al analizador
+//sintáctico, y por lo tanto solo le lleguen lexemas correctos
+void _siguiente_componente_lexico(){
     char c; //Caracter para leer
     int estado=0; //Estado inicial del automata
 
@@ -309,15 +476,18 @@ lexema siguiente_componente_lexico(){
 
     do{
         c=siguienteCaracter();
-        while((c==' ' || c=='\t' || c=='\n' || c=='\r' || c=='\v' || c=='\f') && estado==0){
-                //Es necesaria la comprobacion del estado, ya que el espacio puede determinar si estamos ante un tipo de
-                //lexema u otro, por lo que si se salta, se pierde esa informacion .
-                //Solo si es un estado incial del reconocimiento de automatas se saltará, interpretando entonces que es
-                //un lexema de espacio en blanco, pero que no se le manda al analizador sintactico
 
-              //Si sucede esto, se pasa al siguiente caracter. No es un error, ya que cuando un automata acaba
-              // en un espacio en blanco, ya lo ha reconocido, y lo que ha hecho es volver atras
-              c=saltarCaracter();
+
+
+        while((c==' ' || c=='\t' || c=='\n' || c=='\r' || c=='\v' || c=='\f') && estado==0){
+            //Es necesaria la comprobacion del estado, ya que el espacio puede determinar si estamos ante un tipo de
+            //lexema u otro, por lo que si se salta, se pierde esa informacion .
+            //Solo si es un estado incial del reconocimiento de automatas se saltará, interpretando entonces que es
+            //un lexema de espacio en blanco, pero que no se le manda al analizador sintactico
+
+            //Si sucede esto, se pasa al siguiente caracter. No es un error, ya que cuando un automata acaba
+            // en un espacio en blanco, ya lo ha reconocido, y lo que ha hecho es volver atras
+            c=saltarCaracter();
 
         }
         caracteresLeidos=1; //Se inicializa a 0 el numero de caracteres leidos
@@ -329,6 +499,10 @@ lexema siguiente_componente_lexico(){
                 }
                 else if(isdigit(c)){ //Si es un numero
                     _automataNumeros(c);
+                }
+                else if(c==EOF){
+                    lex.valor=EOF; //Se acepta el lexema
+                    //Este caso es solo para reconocer el EOF
                 }
 
                 else{
@@ -342,12 +516,13 @@ lexema siguiente_componente_lexico(){
                         case ',':
                         case '{':
                         case '>':
+                        case '<':
                         case '-':
                         case '*':
                         case '}':
                             _aceptar(c); //Se acepta el lexema
                             break;
-                        //Aqui empiezan casos en los que pueden ser distintos lexemas segun lo que haya a la derecha
+                            //Aqui empiezan casos en los que pueden ser distintos lexemas segun lo que haya a la derecha
                         case '/':
                             estado=1;
                             break;
@@ -355,10 +530,10 @@ lexema siguiente_componente_lexico(){
                             estado=2;
                             break;
                         case '"':
-                            estado=3;
+                            _automataStrings();
                             break;
                         case '+':
-                            estado=4;
+                            estado=3;
                             break;
 
 
@@ -398,11 +573,8 @@ lexema siguiente_componente_lexico(){
                         estado=0;
                 }
                 break;
-            case 3: //  '"'
-                _automataStrings();
-                estado=0;
-                break;
-            case 4: //  '+'
+
+            case 3: //  '+'
                 switch (c) {
                     case '+':
                         _aceptar(MASMAS);
@@ -419,13 +591,41 @@ lexema siguiente_componente_lexico(){
                         estado=0;
                 }
             default:
+
                 break;
         }
 
 
     } while (c!=EOF && aceptado==false );
 
-    return lex;
+
+}
+
+
+
+//----------Fin de funciones privadas--------
+
+void  inicializarAnalizadorLexico(char *nombreFichero){
+    aceptado=false;
+    //Se inicializan los valores del lexema(No se reserva memoria para el campo que almacenará el string porque esto lo hara
+    // el sistema de entrada, segun el tamaño de dicho string)
+    lex.valor=0;
+    lex.clave=NULL;
+    maxlexema=inicializarCentinela(nombreFichero);
+}
+
+
+lexema siguiente_componente_lexico(){
+   do{
+       _siguiente_componente_lexico();
+   } while (lex.clave==NULL && lex.valor!=EOF);
+   return lex;
+}
+
+void finalizarAnalizadorLexico(){
+    _liberarLexema();
+    finalizarSistemaEntrada();
+
 }
 
 

@@ -1,4 +1,6 @@
 #include "tabla_hash_recolocacion.h"
+#include <stdint.h>
+
 
 /* TABLA HASH CON RECOLOCACION */
 
@@ -8,6 +10,7 @@ void InicializarTablaHash(TablaHash t) {
     for (i = 0; i < Tam; i++){
         t[i].clave = (char *) malloc(64*sizeof(char));
         t[i].clave[0]=VACIO;
+        t[i].valor=0;
     }
 
 }
@@ -48,6 +51,8 @@ int Hash (char *cad){
      }
      return suma;
  }
+
+
 
 
 
@@ -171,9 +176,8 @@ void InsertarHash(TablaHash t, lexema e) {
     int pos,col;
     col=Hash(e.clave);
     //Inicio de parte modificada
-    if (t[col].clave[0] != VACIO){
-        printf("HAY COLISION");
-    }
+
+
     //Fin de parte modificada
     pos = _PosicionInsertar(t,e.clave);
 

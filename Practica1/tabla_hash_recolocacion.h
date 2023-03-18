@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define Tam 100
+#define Tam 79
 /*DEFINIR NUMERO de entradas en la tabla.*/
 #define VACIO '\0'
 #define BORRADO ' '
@@ -18,7 +18,7 @@ typedef struct{
 
 }lexema;
 
-typedef lexema TablaHash[Tam];
+typedef lexema *TablaHash;
 
 //Funcion para inicializar la tabla
 void InicializarTablaHash(TablaHash t);
@@ -35,8 +35,9 @@ void InsertarHash(TablaHash t,  lexema e);
 //Funcion para borrar un elemento de la tabla
 void BorrarHash(TablaHash t, char *cad);
 
-//Funcion para borrar toda la ta bla
+//Funcion para borrar toda la tabla
 void BorrarTabla(TablaHash t);
+
 
 //Funcion para imprimir la tabla
 void imprimirTabla(TablaHash t);
