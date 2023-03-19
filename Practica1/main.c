@@ -10,12 +10,20 @@
 
 int main(int argc, char **argv) {
 
+    char *filename = NULL;
+    if (argc == 2) {
+        filename = argv[1];
+    } else {
+        printf("Uso: ./ejecutable <nombre_archivo>\n");
+        return EXIT_FAILURE;
+    }
+
     //Se inicializa la tabla de símbolos
     inicializarTablaSimbolos(); //Se inicializa la tabla de símbolos
     verTabla(); //Se muestra la tabla
 
     //Se inicializa el analizador lexico, qye ya inicializa el sistema de entrada
-    inicializarAnalizadorLexico("regression.d"); //Se inicializa el sistema de entrada
+    inicializarAnalizadorLexico(filename); //Se inicializa el sistema de entrada
 
     //Se invoca al analizador sintáctico
     analizadorSintactico();
