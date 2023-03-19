@@ -43,7 +43,6 @@ void main()
     ///Parsing tests. Comment to compile
     a = /+ // +/ 1;
     a = /+ "+/" +/ 1";
-    T
     a = /+ /* +/ *2/ 3;
 }
 

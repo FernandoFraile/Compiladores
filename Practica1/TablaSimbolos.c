@@ -2,12 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <stdbool.h>
 #include "errores.h"
 #include "TablaSimbolos.h"
 
 TablaHash Tabla; //Tabla de símbolos implementada con una tabla Hash
-lexema estructura;  //Estructura requerida para insertar en la tabla Hash
+CompLexico estructura;  //Estructura requerida para insertar en la tabla Hash
 //short contador; //Contador para saber que valor asignar al siguiente elemento que entre en la tabla de simbolos
 #define TAMTAB  79 //Tamanho de las lineas del fichero
 #define TAMLEX 30 //Tamanho del lexema
@@ -15,8 +14,7 @@ lexema estructura;  //Estructura requerida para insertar en la tabla Hash
 void inicializarTablaSimbolos(){
     FILE *fp;
     char *aux; //Para leer la macro definido
-    lexema LEX;
-    int contadorColisiones=0;
+    CompLexico LEX;
     short argumentos; //Variable para almacenar el numero de argumentos leidos en sscanf
 
 
@@ -39,16 +37,16 @@ void inicializarTablaSimbolos(){
     }
     //Se crea la estrucutra para la tabla de simbolos
     Tabla= NULL; //Se inicializa a NULL
-    Tabla = (TablaHash) malloc (TAMTAB*sizeof(lexema));
+    Tabla = (TablaHash) malloc (TAMTAB*sizeof(CompLexico));
     if(Tabla == NULL){
         errorSistema(strerror(errno));
     }
 
 
-    InicializarTablaHash(Tabla);
+    InicializarTablaHash(Tabla); //Se inicializa la tabla de simbolos
 
     //Hay que leer el archivo de definiciones. Primero realizo distintas comprobaciones
-    fp = fopen("../definiciones.h", "r");
+    fp = fopen("definiciones.h", "r");
 
     if (fp == NULL) {
         errorSistema(strerror(errno));
@@ -63,11 +61,7 @@ void inicializarTablaSimbolos(){
         argumentos=sscanf(linea,"#define %s %hd //%s",aux,&LEX.valor,LEX.clave);
         if(argumentos==3){
             InsertarHash(Tabla,LEX);
-            /*
-            if(contadorColisiones>0){
-                printf("Ha habido colision en %s",LEX.clave);
-            }
-             */
+
 
         }
     }
@@ -86,12 +80,12 @@ void inicializarTablaSimbolos(){
 
 }
 
-short buscarTabla(lexema *lex){
+short buscarTabla(CompLexico *lex){
     //Se busca en la tabla de simbolos
     return (short)MiembroHash(Tabla,lex->clave);
 }
 
-void insertarTabla(lexema *lex){
+void insertarTabla(CompLexico *lex){
     //Se inserta en la tabla de simbolos
     //Primero se incrementa el contador
     InsertarHash(Tabla,*lex);

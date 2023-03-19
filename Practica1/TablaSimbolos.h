@@ -10,9 +10,9 @@
 
 
 //Funcion para buscar un elemento en la tabla. Devuelve 0 si no está, y el valor asignado si está.
-short buscarTabla(lexema *lex);
+short buscarTabla(CompLexico *lex);
 //Funcion para insertar un elemento en la tabla
-void insertarTabla(lexema *lex);
+void insertarTabla(CompLexico *lex);
 //Funcion para inicializar la tabla de simbolos
 void inicializarTablaSimbolos(); //Devuelve un EXIT_FAILURE en caso de error, EXIT_SUCCESS en caso de exito
 //Funcion para imprimir lo que hay en la tabla de simbolos

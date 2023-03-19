@@ -145,7 +145,6 @@ int _PosicionInsertar(TablaHash t, char *cad) {
 /* Devuelve el valor si el elemento de clave cad está en la tabla, 0 si no está */
 int MiembroHash(TablaHash t, char *cad) {
 
-    int nCol, colision;
 
     int pos = _PosicionBuscar(t,cad);
     if (t[pos].clave[0] == VACIO)
@@ -157,7 +156,7 @@ int MiembroHash(TablaHash t, char *cad) {
 
 /* BUSCA UN ELEMENTO CON LA CLAVE INDICADA EN LA TABLA HASH, Y LO DEVUELVE,
  * ADEMAS DE INDICAR CON 1 QUE EXISTE EL ELEMENTO, Y CON 0 QUE NO ESTA EN LA TABLA */
-int Busqueda(TablaHash t, char *clavebuscar, lexema *e) {
+int Busqueda(TablaHash t, char *clavebuscar,  CompLexico *e) {
 
     int pos = _PosicionBuscar(t,clavebuscar);
 
@@ -172,9 +171,9 @@ int Busqueda(TablaHash t, char *clavebuscar, lexema *e) {
 }
 
 /* Función que inserta un elemento en la tabla */
-void InsertarHash(TablaHash t, lexema e) {
-    int pos,col;
-    col=Hash(e.clave);
+void InsertarHash(TablaHash t,CompLexico e) {
+    int pos;
+    Hash(e.clave);
     //Inicio de parte modificada
 
 
@@ -214,7 +213,7 @@ void BorrarTabla(TablaHash t){
 
 void imprimirTabla(TablaHash t){
     for (int i = 0; i < Tam; i++) {
-        lexema actual = t[i];
+        CompLexico actual = t[i];
         printf("%hd \t %s\n", actual.valor,actual.clave);
     }
 }

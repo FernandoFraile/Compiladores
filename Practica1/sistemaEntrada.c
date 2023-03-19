@@ -1,4 +1,3 @@
-#include <unistd.h>
 #include <stdbool.h>
 #include "stdlib.h"
 #include "stdio.h"
@@ -17,7 +16,7 @@ bool cargar; //Variable para saber si tiene que cargar el sigueinte bloque. Se p
                 //siguiente porque se acepta un lexema
 
 
-char cargarBloque(){
+void cargarBloque(){
 
     int n; //Bytes
     //OJO: Si el tamanho del lexema excede el tamaño de bloque, se comprobará en el analizador léxico
@@ -29,10 +28,9 @@ char cargarBloque(){
     //Se lee con fread
     //Dependiendo de donde esté el puntero siguiente, se carga el bloque A o B del centinela
     if(siguiente==0 || siguiente==2*MAX_LEXEMA+1){ //Cargar Bloque A
-        //La primera comprobacion es por si es la primera llamada a la funcion, y la segunda por si se ha llegado al final del bloque B
         n=fread((char *) centinela, sizeof(char), MAX_LEXEMA, fp);
         if(feof(fp)){ //Cuando se llega al final del archivo
-            centinela[n]=EOF;
+            centinela[n]=EOF; //Se pone el EOF en la ultima posicion del bloque A
         }
         if(ferror(fp)){
             errorSistema(strerror(errno));
@@ -43,7 +41,7 @@ char cargarBloque(){
     else if(siguiente==MAX_LEXEMA){ //Cargar Bloque B
         n=fread((char *) centinela+MAX_LEXEMA+1, sizeof(char), MAX_LEXEMA, fp);
         if(feof(fp)){ //Cuando se llega al final del archivo
-            centinela[n+MAX_LEXEMA]=EOF;
+            centinela[n+MAX_LEXEMA]=EOF; //Se pone el EOF en la ultima posicion del bloque B
         }
         if(ferror(fp)){
             errorSistema(strerror(errno));
@@ -58,7 +56,7 @@ char cargarBloque(){
 
 char siguienteCaracter(){
 
-    //Para devolver el caracter se ve donde esta el puntero siguiente
+    //Para devolver el caracter se ve donde está el puntero siguiente
 
     if(centinela[siguiente]==EOF){ //Se ve si se ha llegado al final de bloque
         if(siguiente==MAX_LEXEMA){ //Se ha llegado al final del bloque A
@@ -115,17 +113,18 @@ char saltarCaracter(){
 }
 
 
+void HayError(){ //Lo que hace es gestionar el puntero inicio y siguiente cuando se produce un errror
+    _lexemaReconocido();
+}
 
-void retroceder(bool err){
+void retroceder(){
     //Se comprueba donde está el puntero siguiente
     if(siguiente==0 || siguiente==MAX_LEXEMA){  //En esta situacion esta justo antes de un EOF
         cargar=false; //Se pone a false para que no se cargue el siguiente bloque 2 veces, cuando se invoque a siguiente cacracter
         cargarBloque();
     }
     siguiente--; //Se retrocede el puntero siguiente
-    if(err==true){ //Gestion de casos de error
-        inicio=siguiente; //Se pone el puntero inicio al mismo sitio que el puntero siguiente
-    }
+
 
 }
 
@@ -133,13 +132,14 @@ void aceptarComentario(){
     _lexemaReconocido(); //Solo cambia el puntero de inicio
 }
 
-void aceptarLexema(lexema *lex){
+void aceptarLexema(CompLexico *lex){
 
     //Se reserva memoria
     //Hay 2 casos distintos: los punteros estan en distintos bloques de memoria y están el el mismo
-    //Recordemos que el caso de que el lexema
+    //Recordemos que el caso de que el lexema sea mayor que el tamanho del bloque ya se ha comprobado en el analizador léxico
     if((inicio<MAX_LEXEMA && siguiente<=MAX_LEXEMA) || (inicio>MAX_LEXEMA && siguiente>MAX_LEXEMA)){ //Mismo bloque
         lex->clave = (char *) malloc(sizeof(char)*(siguiente-inicio+1)); //Se suma uno para añadir un caracter fin de cadena '\0'
+        //Se copia el lexema
         strncpy(lex->clave,centinela+inicio,sizeof(char)*(siguiente-inicio));
         strncpy(lex->clave+(siguiente-inicio),"\0",1);
 
@@ -173,7 +173,6 @@ void aceptarLexema(lexema *lex){
 
 int obtenerLineaYPalabra(char *palabra){
     //Se copia el lexema en la variable palabra
-    int auxiliar; //se va a utilizar para calcular cuanto hay que copiar del lexema si estan en distintos bloques
     if(palabra!=NULL){
         //Hay que diferenciar si el inicio esta en el primer bloque o en el segundo
         if((inicio<MAX_LEXEMA && siguiente<MAX_LEXEMA) || (inicio>MAX_LEXEMA && siguiente>MAX_LEXEMA)){ //Mismo bloque
@@ -183,6 +182,7 @@ int obtenerLineaYPalabra(char *palabra){
         }
         else{ //Si estan en distinto bloque
             if(inicio<MAX_LEXEMA){ //Empieza en el bloque A
+                //Se comprueba si el lexema se ha dividido en 2 bloques, segun donde se situe en puntero inicio
                 if(MAX_LEXEMA-inicio<MAX_LEXEMA){
                     strncpy(palabra,centinela+inicio,sizeof(char)*(MAX_LEXEMA-inicio)); //Se copia la parte del primer bloque
                     strncpy(palabra+MAX_LEXEMA-inicio, centinela+MAX_LEXEMA+1,sizeof(char)*(MAX_LEXEMA-(MAX_LEXEMA-inicio))); //Se copia la parte del segundo bloque
@@ -195,6 +195,7 @@ int obtenerLineaYPalabra(char *palabra){
                 }
             }
             else{ //Empieza en el bloque B
+                //Se comprueba si el lexema se ha dividido en 2 bloques, segun donde se situe en puntero inicio
                 if(2*MAX_LEXEMA+1-inicio<MAX_LEXEMA){
                     strncpy(palabra,centinela+inicio,sizeof(char)*(2*MAX_LEXEMA+1-inicio)); //Se copia la parte del segundo bloque
                     strncpy(palabra+2*MAX_LEXEMA+1-inicio,centinela,sizeof(char)*(MAX_LEXEMA-(2*MAX_LEXEMA+1-inicio))); //Se copia la parte del segundo bloque
@@ -213,6 +214,7 @@ int obtenerLineaYPalabra(char *palabra){
         }
 
     }
+    //Se devuelve la linea
     return linea;
 }
 
@@ -253,8 +255,6 @@ void finalizarSistemaEntrada(){
         fclose(fp);
 
     }
-
-
 
 }
 
