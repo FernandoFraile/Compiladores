@@ -1,3 +1,0 @@
-/home/fernando/Compiladores/Practica1/cmake-build-debug/CMakeFiles/Practica1.dir
-/home/fernando/Compiladores/Practica1/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/fernando/Compiladores/Practica1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
