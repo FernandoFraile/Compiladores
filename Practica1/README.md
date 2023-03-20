@@ -8,3 +8,7 @@ Qué se va a mostra al ejecutarse:
 
 Primero se mostrará la tabla de símbolos después de iniciarse. Posteriormente, se mostrará el resultado del análisis léxico, mostrando el par lexema y 
 componente léxico de la forma <Componente_léxico,Lexema>. Finalmente se vuelve a imprimir la tabla de símbolos para ver como ha quedado. 
+
+Tabla de símbolos: 
+
+Se ha utilizado una tabla Hash para la realización de la tabla de símbolos. Se ha considerado que, teniendo en cuenta que el tamaño es menos del doble que los componentes léxicos almacenados y que se producen solo 2 colisiones en la inserción, las ventajas que aporta el rápido acceso a los elementos es favorable en cuanto a la elección de esta estructura con respecto a otra. 
