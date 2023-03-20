@@ -8,12 +8,12 @@
 #define VOID 306 //void
 #define CAST 307 //cast
 //Fin de palabras reservadas
-#define INTEGER 308 //integer
-#define ID 309 //id
-#define STRING 310 //string
-#define FLOATING 311 //float
-#define ENDFILE 312 //endfile 
-#define IGUALIGUAL 313 //==
-#define MASIGUAL 314 //+=
-#define MASMAS 315 //++ 
+#define INTEGER 308 
+#define ID 309 
+#define STRING 310 
+#define FLOATING 311
+#define ENDFILE 312 
+#define IGUALIGUAL 313 
+#define MASIGUAL 314 
+#define MASMAS 315 
 

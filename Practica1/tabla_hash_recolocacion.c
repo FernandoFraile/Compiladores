@@ -1,5 +1,4 @@
 #include "tabla_hash_recolocacion.h"
-#include <stdint.h>
 
 
 /* TABLA HASH CON RECOLOCACION */

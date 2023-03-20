@@ -61,8 +61,7 @@ void inicializarTablaSimbolos(){
         argumentos=sscanf(linea,"#define %s %hd //%s",aux,&LEX.valor,LEX.clave);
         if(argumentos==3){
             InsertarHash(Tabla,LEX);
-
-
+            
         }
     }
 
