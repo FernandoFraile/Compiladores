@@ -1,0 +1,27 @@
+Flex construye un AFND, luego construye el AFD, y luego lo minimiza. Esto último es el analizador léxico. 
+
+Pascal.l->contiene el conjunto de expresiones regulares. El pascal.yy.c contiene el analizador y un sistema de entrada propios. 
+
+yylex() es la función que sustituye a siguiente.compoenente.lexico, y está en yy.c . {eb} espacio en blanco, 
+
+yylex() devuelve un int, y hay que imprimir del mismo modo el lexema. Hay 2 formas para hacerlo, no tirar el analizador lexico para no perder el lexema. 
+yytex deposita el lexema actual aquí, por lo que lo ponemos en el puntero  a char que teniamos en la estructura. Otra forma es cambiar la definicion de 
+yylex(), se le puede poner que yylex() deuelva un puntero a struct y así devolver un int y un char dentro del struct. 
+
+yy.c ya proporciona todo el sitema de entrada. 
+
+No todo en el lenguaje D son expresiones regulares, los comentarios anidados no es una expresion regular (seria con una pila). Entre las llaves de la 
+segunda sección puedo poner código C, por lo que indico que cuando hay un comentario anidado sigue una lógica de implementación de pila. 
+
+Las condiciones de arranque son importantes. Ver donde se produce el error es importante (línea). La condicones de arranque puede resolver este problema, 
+para detectar las líneas dentro de una expresión regular, en los comentarios de bloque y anidados. 
+
+Hay que añadir el fichero.l . Cogemos expresiones de la pagina web del lenguaje, y las ponemos. 
+
+Tiene que haber readme, makefile. Compilación sin advertencias (-Wall). Los warnings de flex no se tienen en cuenta en la evaluación. 
+
+
+COMENTARIOBLOQUE \/\*([\s\S]*?)\*\/
+
+"((?:\\.|[^"\\])*)"
+
