@@ -1,0 +1,49 @@
+Dos formas de ejecución básicas: 
+	Un cursor que se ejecute con un retorno de carro
+	Un fichero con las expresiones (./interprete <archivo>), y devuelve el cursor al usuario por si quiere introducir más comandos. 
+	
+Habrá una función load(), que leerá el fichero entre paréntesis. El lenguaje del interprete puede tener condiconales, bucles..
+
+Dos versiones para la evaluación: 
+	-Básicas: el interprete debe realizar cualquier operación aritmética básicas en numeros enteros y flotantes (excluimos binarios etc). Sumar, multiplicar, inverso etc. Tmb trigonométicas y logarítimicas (algunas). Tiene que implementar las ctes Pi y e (número e). Permitirá realizar asignaciones 
+a variables, de modo que podré poner "a=4+3" y reutilizar la variable a. Hay que tener en cuenta algunos posibles errores, como no inicializarla variable que 
+se utiliza, y cuando una variable no se inicializa automáticamente a 0 (se le debe de proporcionar una advertencia). También debe gestionar los errores de 
+asignarle un valor a una cte (Pi o e). Debe tener una espicificación del echo. Conmutaría entre on | off (si está a on, cuando se calcula algo, se imprime
+por pantalla). Esto se puede hacer por ejemplo, como en matlab, poniendo un ; al final de la linea, que indica que se imprime. Tiene que tener funciones 
+del sistema: workspace() que imprime el conjunto de variables inicializadas desde el inicio de la sesión y su valor actual, clear () borra el conjunto de 
+variables inicializadas desde el inicio de sesión o especificar cuales quiero borrar, quit() cerrar el interprete y devolver el control al cursor de linux, 
+help() aportará una ayuda basica de como se utiliza el interprete. 
+El usuario podrá introducir diversas notaciones para los números, pero mejor hacer todas las operaciones como punto flotante. También es mejor no considerar 
+los valores como matrices. Hay que valorar errores sintácticos de todo tipo (cerrar mal parentesis, etc), erroes léxicos de todo tipo
+	-Premium: permitirá importar en tiempo de ejecución cualquier libería, mediante un comando import(). No forman parte de la interpretación de mi 
+interprete, si no que puede trabajar con las funciones que se proporcionan dinámicamente. 
+
+
+Vamos a utilizar flex y bison. Bison genera analizadores sintácticos que permiten desarrollar un sistema de atributos. Hay que ponerle un fichero de 
+especificación, pero en el cual representamos una GIC de tipo LALR. Vamos a añadirle un conjunto de fragmentos de código en C que realizan las operaciones 
+mientras se crea el árbol. En lo del flex vamos a quedarnos con lo del lenguaje D, quedandose solo con numeros y cadenas alfanumericas. Hay que añadirle 
+la Tabla de Símbolos. Permitirá gestionar las operaciones de asignación. Si tengo  "r" | VAR 1 | 7, el 7 es el valor, y voy a tener que guardarlo en la tabla 
+de símbolos. Tabmién puedo meter en la tabla de símbolos las funciones "sin" | FUN | puntero a libería math.h en la versión básica. Por lo que los 
+registros de la tabla de símbolos van a cambiar, no es lo mismo para un numero que para una funcion. Para gestionar esto se puede usar la operación
+de union de lenguaje C. En el manual hay una calculadora científica que se parece mucho a lo que piden en la práctica. El analizador léxico y la tabla de 
+símbolos es una mierda, pero sirve como base. 
+
+Cómo se utilizan punteros a funciones? En el manual está hecho también. 
+
+Las funciones y así las diferenciará la tabla de símbolos, a nivel léxico. A nivel sintáctico, si tengo nombre(arg) , el nombre estará ne la tabla de 
+símbolos, si veo que está y que está seguido de paréntesis y argumento. | FNCT ’(’ exp ’)’ { $$ = (*($1->value.fnctptr))($3); } Esto es lo que está en el 
+manual. Lo que está entre llaves {} es la semántica. el value.fnctptr es el puntero a la función, el $3 se le proporciona como argumento el tercer elemtno 
+de la producción, es decir, expr. El resultado que se guarda en $$ se guarda en el nodo del árbol. 
+
+PREMIUM: dlfcn.h de C, ofrece implementación para dlopen(), dlclose(), dlerror() que proporciona un error si no se encuentra un símbolo, dlsym() proporciona
+un ejemplo de algún elemento de la libería. Estas funciones se pueden invocar en tiempo de ejecución.En el import dlopen() al principio, dlclose() al final,
+y accedo con dlsym(). No hay que descargar todas las funciones de la librería. Una solución puede ser que abro el import() y puedo acceder a las funciones, 
+no se cuales son, pero a nivel léxico cuando leo un nombre, voy a la Tabla de Simbolos, y puede ser un identificador o una función. Le pregunto a la libería 
+si está la función, y si está, la introduzco en la tabla y le meto un handle a la función, por lo que podré acceder con dlsym(). Esta solución es jodienda. 
+La función no sabemos de qué tipo es, por lo que habría que gestionarlo con (void *), y el tema de los punteros se puede complicar. Los argumentos que 
+hay que pasarle a la función hay que saberlos por el manual, por lo que si se meten mal, es un error en ejecución. 
+
+
+
+
+

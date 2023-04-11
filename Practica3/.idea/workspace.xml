@@ -11,7 +11,7 @@
   </component>
   <component name="CMakeRunConfigurationManager">
     <generated>
-      <config projectName="Practica2" targetName="Practica2" />
+      <config projectName="Practica3" targetName="Practica3" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -20,7 +20,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="43604f24-00c5-4b38-9d88-e8fe8b04abe0" name="Changes" comment="" />
+    <list default="true" id="cbc495ad-2924-416d-951e-42d545856804" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,7 +41,7 @@
     <option name="majorVersion" value="2022" />
     <option name="minorVersion" value="3.2" />
   </component>
-  <component name="ProjectId" id="2NKpdLLtUUMhnkEukQ0CXEa0WPq" />
+  <component name="ProjectId" id="2NvWgsBOUjycsI8EvDPjAc5ecDb" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -54,7 +54,7 @@
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/fernando/Compiladores/Practica1/sistemaEntrada.c&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/fernando/Compiladores/Practica3&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -62,8 +62,14 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/cmake-build-debug" />
+    </key>
+  </component>
   <component name="RunManager">
-    <configuration name="Practica2" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Practica2" TARGET_NAME="Practica2" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Practica2" RUN_TARGET_NAME="Practica2">
+    <configuration name="Practica3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="entrada.txt " REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Practica3" TARGET_NAME="Practica3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Practica3" RUN_TARGET_NAME="Practica3">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -72,34 +78,19 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="43604f24-00c5-4b38-9d88-e8fe8b04abe0" name="Changes" comment="" />
-      <created>1679422713233</created>
+      <changelist id="cbc495ad-2924-416d-951e-42d545856804" name="Changes" comment="" />
+      <created>1680545150336</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1679422713233</updated>
-      <workItem from="1679422714790" duration="1000" />
-      <workItem from="1679472669124" duration="1516000" />
-      <workItem from="1679480173878" duration="641000" />
-      <workItem from="1679520438202" duration="3270000" />
-      <workItem from="1679558572628" duration="2365000" />
-      <workItem from="1679596406778" duration="3533000" />
-      <workItem from="1679640136533" duration="16087000" />
-      <workItem from="1679683539562" duration="47000" />
-      <workItem from="1679738310590" duration="1214000" />
-      <workItem from="1679742226610" duration="87000" />
-      <workItem from="1679764003152" duration="2004000" />
-      <workItem from="1679769314185" duration="94000" />
-      <workItem from="1679770550466" duration="46000" />
-      <workItem from="1679899833096" duration="1000" />
-      <workItem from="1679923345066" duration="5595000" />
-      <workItem from="1679929806751" duration="1000" />
-      <workItem from="1679944964901" duration="9000" />
-      <workItem from="1679945066275" duration="1316000" />
-      <workItem from="1680099232953" duration="382000" />
-      <workItem from="1680267317243" duration="3000" />
-      <workItem from="1680334929942" duration="3000" />
-      <workItem from="1680343657564" duration="3000" />
-      <workItem from="1680545108069" duration="45000" />
+      <updated>1680545150336</updated>
+      <workItem from="1680545151868" duration="3537000" />
+      <workItem from="1680710048076" duration="1995000" />
+      <workItem from="1680890822029" duration="2833000" />
+      <workItem from="1680933021597" duration="12966000" />
+      <workItem from="1680962997326" duration="10486000" />
+      <workItem from="1681057392582" duration="4690000" />
+      <workItem from="1681145787593" duration="722000" />
+      <workItem from="1681216868172" duration="397000" />
     </task>
     <servers />
   </component>

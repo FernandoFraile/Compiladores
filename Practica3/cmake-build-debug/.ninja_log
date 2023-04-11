@@ -1,0 +1,19 @@
+# ninja log v5
+1	30	1680938459876003285	CMakeFiles/Practica3.dir/errores.c.o	6cdc8d8db8f45089
+1	94	1680943546811683864	CMakeFiles/Practica3.dir/bison.tab.c.o	5c7706df13ed70f5
+1	102	1680943546819683848	CMakeFiles/Practica3.dir/lex.yy.c.o	2b3d0155c6541c65
+0	51	1680963088759356698	build.ninja	ab26a3ffe50a76b3
+0	57	1680943546775683935	CMakeFiles/Practica3.dir/tabla_hash_recolocacion.c.o	1f46b49abd8270d8
+0	67	1680943546787683911	CMakeFiles/Practica3.dir/main.c.o	fc05201fd62b3576
+1	49	1680943546767683950	CMakeFiles/Practica3.dir/TablaSimbolos.c.o	d2803262cc3c657
+102	125	1680943546843683800	Practica3	c04fc0068c4156fb
+0	30	1680973250297111452	CMakeFiles/Practica3.dir/main.c.o	fc05201fd62b3576
+1	45	1680973250309111457	CMakeFiles/Practica3.dir/calculadora.c.o	5d12e3443c6ab827
+0	47	1680973250313111458	CMakeFiles/Practica3.dir/TablaSimbolos.c.o	d2803262cc3c657
+0	73	1680973250337111469	CMakeFiles/Practica3.dir/bison.tab.c.o	5c7706df13ed70f5
+1	85	1680973250349111473	CMakeFiles/Practica3.dir/lex.yy.c.o	2b3d0155c6541c65
+0	36	1680973310873136399	CMakeFiles/Practica3.dir/main.c.o	fc05201fd62b3576
+1	36	1680973310873136399	CMakeFiles/Practica3.dir/calculadora.c.o	5d12e3443c6ab827
+0	56	1680973310897136409	CMakeFiles/Practica3.dir/bison.tab.c.o	5c7706df13ed70f5
+1	70	1680973310909136414	CMakeFiles/Practica3.dir/lex.yy.c.o	2b3d0155c6541c65
+70	87	1680973310925136421	Practica3	937ee31f340b43fb
