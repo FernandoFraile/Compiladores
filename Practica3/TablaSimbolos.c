@@ -2,35 +2,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <dlfcn.h>
 #include "errores.h"
 #include "TablaSimbolos.h"
 #include "bison.tab.h"
+#include "calculadora.h"
+
 
 TablaHash Tabla; //Tabla de símbolos implementada con una tabla Hash
-CompLexico estructura;  //Estructura requerida para insertar en la tabla Hash
 //short contador; //Contador para saber que valor asignar al siguiente elemento que entre en la tabla de simbolos
 #define TAMTAB  79 //Tamanho de las lineas del fichero
 #define TAMLEX 30 //Tamanho del lexema
+
+
+void _liberarMemoria(CompLexico *lex){ //Funcion auxiliar para liberar la memoria del campo clave de la estructura
+    free(lex->clave);
+    lex->clave = NULL;
+
+}
 
 void inicializarTablaSimbolos(){
     FILE *fp;
     char *aux; //Para leer la macro definido
     CompLexico LEX;
-    short argumentos; //Variable para almacenar el numero de argumentos leidos en sscanf
 
 
-    char *linea=NULL; //Para leer las lineas del fichero
 
 
     //Hay que inicializar el componente lexico y la linea para leer el fichero
-    LEX.clave = (char*) malloc ((64)*sizeof(char));
-    if(LEX.clave == NULL){
-        errorSistema(strerror(errno));
-    }
-    linea = (char*) malloc ((TAMLEX)*sizeof(char));
-    if(linea == NULL){
-        errorSistema(strerror(errno));
-    }
+
+
 
     aux = (char*) malloc ((TAMLEX)*sizeof(char));
     if(aux == NULL){
@@ -56,15 +57,6 @@ void inicializarTablaSimbolos(){
     }
 
 
-    //Se empieza a leer el archivo
-    while (fgets(linea, TAMLEX, fp) != NULL) {
-        argumentos=sscanf(linea,"#define %s %hd //%s",aux,&LEX.valor,LEX.clave);
-        if(argumentos==3){
-
-            InsertarHash(Tabla,LEX);
-            
-        }
-    }
 
 
     fclose(fp);
@@ -74,25 +66,56 @@ void inicializarTablaSimbolos(){
     LEX.valor = CONSTANTE;
     LEX.variable = 3.14159265358979323846;
     InsertarHash(Tabla,LEX);
+    _liberarMemoria(&LEX);
 
     LEX.clave = strdup("e");
-    LEX.valor = CONSTANTE;
     LEX.variable = 2.71828182845904523536;
     InsertarHash(Tabla,LEX);
+    _liberarMemoria(&LEX);
+
 
     //Se añaden los comandos disponibles en la calculadora
     LEX.clave = strdup("ayuda");
     LEX.valor = COMANDO;
     LEX.variable = 0;
+    LEX.funcion = ayuda; //Se guarda la direccion de la funcion
     InsertarHash(Tabla,LEX);
+    _liberarMemoria(&LEX);
+
+
+    LEX.clave = strdup("cargarFichero");
+    LEX.funcion = cargarFichero; //Se guarda la direccion de la funcion
+    InsertarHash(Tabla,LEX);
+    _liberarMemoria(&LEX);
+
+
+    LEX.clave = strdup("salir");
+    LEX.funcion = salir; //Se guarda la direccion de la funcion
+    InsertarHash(Tabla,LEX);
+    _liberarMemoria(&LEX);
+
+
+    LEX.clave = strdup("workSpace");
+    LEX.funcion = workSpace; //Se guarda la direccion de la funcion
+    InsertarHash(Tabla,LEX);
+    _liberarMemoria(&LEX);
+
+
+    LEX.clave = strdup("borrarWorkSpace");
+    LEX.funcion = eliminarWorkspace; //Se guarda la direccion de la funcion
+    InsertarHash(Tabla,LEX);
+    _liberarMemoria(&LEX);
+
+    LEX.clave = strdup("import");
+    LEX.funcion =  importarLibreria; //Se guarda la direccion de la funcion
+    InsertarHash(Tabla,LEX);
+    _liberarMemoria(&LEX);
+
+
 
 
     if(aux!=NULL){
         free(aux);
-        free(LEX.clave);
-    }
-    if(linea!=NULL){
-        free(linea);
     }
 
 
@@ -125,4 +148,76 @@ void liberarTablaSimbolos(){
         free(Tabla);
     }
 }
+
+
+
+void imprimirVariables(){
+    for(int i=0;i<TAMTAB;i++) {
+        CompLexico aux = Tabla[i];
+        if(aux.valor==VAR){
+            printf("%s = %f \n",aux.clave,aux.variable);
+        }
+
+    }
+
+}
+
+void modificarElementoTabla(CompLexico lex){
+    ModificarHash(Tabla,lex.clave,lex);
+}
+
+void eliminarVariables(){
+    char *clave; //Para guardar la clave de la variable
+    for(int i=0;i<TAMTAB;i++) {
+        CompLexico aux = Tabla[i];
+        if(aux.valor==VAR){
+            clave = strdup(aux.clave);
+            BorrarHash(Tabla,clave);
+            free(clave);
+        }
+
+    }
+    verTabla();
+}
+
+
+int funcionLibDinamica(char *funcion){
+    //Se recorre la tabla de símbolos buscando si existe la función en las librerías cargadas.
+    //Al principio es más costoso computacionalmente, pero luego como se incluye la función en la tabla, el usuario
+    //puede acceder directamente a ella.
+    CompLexico introducirFunc; //Para introducir la función en la tabla de símboloss
+    bool flag = false; //Para controlar el bluce
+    int i=0;
+    while(i<TAMTAB && flag==false) {
+        CompLexico aux = Tabla[i];
+        if(aux.valor==LIBRERIA){
+            void (*fptr)(void);
+            *(void **)(&fptr) = dlsym(aux.libreria,funcion); //Para guardar la direccion de la funcion
+            introducirFunc.clave = funcion;
+            introducirFunc.valor = FUNCION;
+            introducirFunc.funcion =   fptr;
+
+                //Primero se comprueba si ya estaba
+            if(buscarTabla(&introducirFunc)==0){
+                //Si no está se inserta en la tabla de símbolos.
+                InsertarHash(Tabla,introducirFunc);
+            }
+            flag = true;
+
+        }
+        i++;
+
+    }
+    if(flag==true){
+        return 1; //Se ha encontrado la función
+    }
+    else{
+        return 0; //No se ha encontrado la función
+    }
+
+
+
+
+}
+
 

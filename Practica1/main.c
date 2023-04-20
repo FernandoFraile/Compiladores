@@ -18,6 +18,7 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
+
     //Se inicializa la tabla de símbolos
     inicializarTablaSimbolos(); //Se inicializa la tabla de símbolos
     verTabla(); //Se muestra la tabla
@@ -34,6 +35,8 @@ int main(int argc, char **argv) {
     //Se liberan los recursos
     liberarTablaSimbolos();
     finalizarAnalizadorLexico();
+
+
 
 
     return EXIT_SUCCESS;

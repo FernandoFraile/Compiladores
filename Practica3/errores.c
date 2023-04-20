@@ -4,8 +4,7 @@
 #include "errores.h"
 
 void errorSistema(char *error){
-    printf("Error: %s",error);
-    exit(EXIT_FAILURE);
+    printf("Error: %s\n",error);
 }
 
 void errorLexicoTamanho(int linea,char *palabra){

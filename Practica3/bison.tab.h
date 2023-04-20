@@ -58,7 +58,16 @@ extern int yydebug;
     VAR = 259,                     /* VAR  */
     CONSTANTE = 260,               /* CONSTANTE  */
     COMANDO = 261,                 /* COMANDO  */
-    NEG = 262                      /* NEG  */
+    FICHERO = 262,                 /* FICHERO  */
+    LIBRERIA = 263,                /* LIBRERIA  */
+    FUNCION = 264,                 /* FUNCION  */
+    SIN = 265,                     /* SIN  */
+    COS = 266,                     /* COS  */
+    TAN = 267,                     /* TAN  */
+    LOG = 268,                     /* LOG  */
+    SQRT = 269,                    /* SQRT  */
+    EXP = 270,                     /* EXP  */
+    NEG = 271                      /* NEG  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -67,12 +76,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 18 "bison.y"
+#line 22 "bison.y"
 
     double variable;
     char *cadena;
 
-#line 76 "bison.tab.h"
+#line 85 "bison.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -83,8 +92,9 @@ typedef union YYSTYPE YYSTYPE;
 
 extern YYSTYPE yylval;
 
+#include <stdbool.h>
 
 int yyparse (void);
-
+void ejecutarFichero(bool opcion); //Funcion para indicarle que está ejecutando el fichero o no
 
 #endif /* !YY_YY_BISON_TAB_H_INCLUDED  */

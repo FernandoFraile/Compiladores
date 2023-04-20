@@ -1,7 +1,7 @@
 CC=gcc  -Wall 
 
 # Inclúusión das librerías estándares
-LIBS = -lm -lfl
+LIBS = -lm -lfl 
 #carpeta de las cabeceras (SI ESTÁN EN LA ACTUAL, PONEMOS .)
 HEADER_FILES_DIR = .
 #opciones de compilación, indica dónde están los archivos .h
@@ -23,7 +23,7 @@ $(OUTPUT): $(OBJS)
 #$@ es el nombre del fichero que se genera con la regla (.o)
 #$< es el nombre del primer prerrequisito (el archivo .c cuyo .o se está generando)
 %.o: %.c $(LIB_HEADERS)
-	$(CC) -c -o $@ $< $(INCLUDES)
+	$(CC) -c -o $@ $< $(INCLUDES) 
 #regla 3 que borra el ejecutable (prerrequisito: clean)
 cleanall: clean
 	rm -f $(OUTPUT)

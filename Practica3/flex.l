@@ -37,13 +37,23 @@ int comprobar_tamanho(){
 
 
 LETRA [a-zA-Z_]
-OPERADORES [.;\(\)\[\],><\-*\/=\+]
+OPERADORES [\.;\(\)\[\],><\-*\/=\+]
 ESPACIOBLANCO [ \t]+
 NUEVALINEA \n
-REAL [+-]?[0-9|_]+(\.)?[0-9]+([eE][+-][0-9]*)?
-ENTERO [+-]?[0-9|_]+
+REAL [-]?[0-9|_]+(\.)?[0-9]+([eE][+-][0-9]*)?
+ENTERO [-]?[0-9|_]+
+SENO "sin"
+COS "cos"
+TAN "tan"
+LOG "log"
+EXP "exp"
+SQRT "sqrt"
 VARIABLE {LETRA}({LETRA}|{REAL}|{ENTERO})*
 NUMERO {REAL}|{ENTERO}
+FICHERO ({LETRA}|{NUMERO})+\.txt
+LIBRERIA ({LETRA}|{NUMERO})+\.so(\.({LETRA}|{NUMERO}))*
+
+
 
 
 
@@ -72,15 +82,57 @@ NUMERO {REAL}|{ENTERO}
                           yylval.variable=atof(yytext);
                           return NUMERO;
                            } }
+{SENO} {
+          yylval.cadena= strdup(yytext);
+          return SIN;
+        }
+{COS} {
+          yylval.cadena= strdup(yytext);
+          return COS;
+        }
+{TAN} {
+          yylval.cadena= strdup(yytext);
+          return TAN;
+        }
+{LOG} {
+          yylval.cadena= strdup(yytext);
+          return LOG;
+        }
+{SQRT} {
+          yylval.cadena= strdup(yytext);
+          return SQRT;
+        }
+{EXP} {
+          yylval.cadena= strdup(yytext);
+          return EXP;
+        }
 
 {VARIABLE} { if(comprobar_tamanho()){
 
-                           yylval.cadena= strdup(yytext);
+                          yylval.cadena= strdup(yytext);
+                          lex.clave=yylval.cadena;
+                          if(buscarTabla(&lex)){
 
-                          return VAR;
+                              return lex.valor;
+                          }
+                          else{
+
+                                return VAR;
+                          }
 
                     }
         }
+{FICHERO} { if(comprobar_tamanho()){
+                          yylval.cadena= strdup(yytext);
+                          return FICHERO;
+                    }}
+{LIBRERIA} { if(comprobar_tamanho()){
+                          yylval.cadena= strdup(yytext);
+                          return LIBRERIA;
+                    }}
+
+
+
 
 
 
@@ -98,12 +150,6 @@ void liberarLexema(){
         lex.clave=NULL;
     }
 
-}
-
-
-/*Para liberar el analizador lexico*/
-void liberarAnalizadorLexico(){
-    yylex_destroy();
 }
 
 

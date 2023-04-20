@@ -7,10 +7,12 @@ void InicializarTablaHash(TablaHash t) {
     int i;
 
     for (i = 0; i < Tam; i++){
-        t[i].clave = (char *) malloc(64*sizeof(char));
+        t[i].clave = (char *) malloc(sizeof(char));
         t[i].clave[0]=VACIO;
         t[i].valor=0;
         t[i].variable=0;
+        t[i].funcion=NULL;
+        t[i].funcion=NULL;
     }
 
 }
@@ -44,13 +46,13 @@ int Hash (char *cad){
 /* FUNCION HASH 3: Probad al menos dos valores para la constante K */
 
 int Hash (char *cad){
-     int i,suma=0;
-     int K=13;
-     for (i=strlen(cad)-1;i>=0;i--){
-         suma=(suma*K+cad[i])%Tam;
-     }
-     return suma;
- }
+    int i,suma=0;
+    int K=13;
+    for (i=strlen(cad)-1;i>=0;i--){
+        suma=(suma*K+cad[i])%Tam;
+    }
+    return suma;
+}
 
 
 
@@ -174,17 +176,18 @@ int Busqueda(TablaHash t, char *clavebuscar,  CompLexico *e) {
 void InsertarHash(TablaHash t,CompLexico e) {
     int pos;
     Hash(e.clave);
-    //Inicio de parte modificada
 
-
-    //Fin de parte modificada
     pos = _PosicionInsertar(t,e.clave);
 
 
     if (t[pos].clave[0] == VACIO || t[pos].clave[0] == BORRADO) {
+        t[pos].clave = (char *) realloc(t[pos].clave,(strlen(e.clave)+1)*sizeof(char));
+
         strcpy(t[pos].clave, e.clave);
         t[pos].valor = e.valor;
         t[pos].variable = e.variable;
+        t[pos].funcion = e.funcion;
+        t[pos].libreria = e.libreria;
     }
     else if (strcmp(t[pos].clave,e.clave)){
         printf("No se encuentra posicion libre.\n");
@@ -200,6 +203,8 @@ void BorrarHash(TablaHash t, char *cad) {
         if (!strcmp(t[pos].clave, cad)) {
             t[pos].clave[0]= BORRADO;
             t[pos].clave[1]= VACIO;
+            t[pos].valor = 0;
+            t[pos].variable = 0;
         }
     }
 }
@@ -218,6 +223,22 @@ void imprimirTabla(TablaHash t){
         printf("%hd \t %s \t %lf\n", actual.valor,actual.clave,actual.variable);
     }
 }
+
+int ModificarHash(TablaHash t, char *cad, CompLexico e){
+    int pos = _PosicionBuscar(t,cad);
+
+    if (t[pos].clave[0] == VACIO)
+        return 0;
+    else {
+        if (strcmp(t[pos].clave, cad) == 0) {
+            t[pos].variable= e.variable;
+            return 1;
+        } else return 0;
+    }
+}
+
+
+
 
 
 

@@ -7,7 +7,7 @@ void InicializarTablaHash(TablaHash t) {
     int i;
 
     for (i = 0; i < Tam; i++){
-        t[i].clave = (char *) malloc(64*sizeof(char));
+        t[i].clave = (char *) malloc(sizeof(char));
         t[i].clave[0]=VACIO;
         t[i].valor=0;
     }
@@ -173,14 +173,13 @@ int Busqueda(TablaHash t, char *clavebuscar,  CompLexico *e) {
 void InsertarHash(TablaHash t,CompLexico e) {
     int pos;
     Hash(e.clave);
-    //Inicio de parte modificada
 
-
-    //Fin de parte modificada
     pos = _PosicionInsertar(t,e.clave);
 
 
     if (t[pos].clave[0] == VACIO || t[pos].clave[0] == BORRADO) {
+        t[pos].clave = (char *) realloc(t[pos].clave,(strlen(e.clave)+1)*sizeof(char));
+
         strcpy(t[pos].clave, e.clave);
         t[pos].valor = e.valor;
     }

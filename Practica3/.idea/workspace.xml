@@ -54,11 +54,12 @@
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/fernando/Compiladores/Practica3&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/fernando/Descargas/845&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;CMakeSettings&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -66,6 +67,9 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/cmake-build-debug" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunManager">
@@ -90,7 +94,23 @@
       <workItem from="1680962997326" duration="10486000" />
       <workItem from="1681057392582" duration="4690000" />
       <workItem from="1681145787593" duration="722000" />
-      <workItem from="1681216868172" duration="397000" />
+      <workItem from="1681216868172" duration="11845000" />
+      <workItem from="1681288708379" duration="604000" />
+      <workItem from="1681298063925" duration="1034000" />
+      <workItem from="1681309846995" duration="285000" />
+      <workItem from="1681311101318" duration="74000" />
+      <workItem from="1681492569313" duration="604000" />
+      <workItem from="1681564324668" duration="10484000" />
+      <workItem from="1681627288501" duration="8483000" />
+      <workItem from="1681739234935" duration="6284000" />
+      <workItem from="1681801314967" duration="2047000" />
+      <workItem from="1681803474595" duration="1352000" />
+      <workItem from="1681823269566" duration="2796000" />
+      <workItem from="1681836940823" duration="102000" />
+      <workItem from="1681837319461" duration="613000" />
+      <workItem from="1681910192534" duration="1788000" />
+      <workItem from="1681914636712" duration="5753000" />
+      <workItem from="1682006212522" duration="318000" />
     </task>
     <servers />
   </component>

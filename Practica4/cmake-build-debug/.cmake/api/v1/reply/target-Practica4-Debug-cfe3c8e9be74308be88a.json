@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Practica3"
+			"path" : "Practica4"
 		}
 	],
 	"backtrace" : 1,
@@ -53,16 +53,11 @@
 			"sourceIndexes" : 
 			[
 				0,
-				1,
-				2,
-				3,
-				4,
-				5,
-				6
+				1
 			]
 		}
 	],
-	"id" : "Practica3::@6890427a1f51a3e7e1df",
+	"id" : "Practica4::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -78,8 +73,8 @@
 		],
 		"language" : "C"
 	},
-	"name" : "Practica3",
-	"nameOnDisk" : "Practica3",
+	"name" : "Practica4",
+	"nameOnDisk" : "Practica4",
 	"paths" : 
 	{
 		"build" : ".",
@@ -92,19 +87,7 @@
 			"sourceIndexes" : 
 			[
 				0,
-				1,
-				2,
-				3,
-				4,
-				5,
-				6
-			]
-		},
-		{
-			"name" : "Header Files",
-			"sourceIndexes" : 
-			[
-				7
+				1
 			]
 		}
 	],
@@ -119,43 +102,8 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "tabla_hash_recolocacion.c",
+			"path" : "pruebaMatrices.c",
 			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "TablaSimbolos.c",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "bison.tab.c",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "errores.c",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "lex.yy.c",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "calculadora.c",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"path" : "calculadora.h",
-			"sourceGroupIndex" : 1
 		}
 	],
 	"type" : "EXECUTABLE"
