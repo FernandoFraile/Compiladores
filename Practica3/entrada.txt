@@ -1,3 +1,12 @@
+import(libm.so.6)
+x = acos(0.5); 
+
 x = 3;
 
-import(libm.so.6)
+y = 2 * pi * x;
+
+z = x * sin (y + pi/6);
+
+
+
+

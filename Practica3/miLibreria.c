@@ -1,6 +1,7 @@
 
+#include <stdio.h>
+#include "miLibreria.h"
 
-
-int sumar(int a, int b) {
-    return a + b;
+void escribir(){
+    printf("Escribir\n");
 }

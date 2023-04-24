@@ -15,9 +15,7 @@ void errorLexicoComentario(int linea,char *tipo){
     printf("Error: el comentario %s no esta bien formado en la linea %d\n",tipo,linea);
 }
 
-void errorLexicoString(int linea,char *frase){
-    printf("Error en la linea %d: %s\n",linea,frase);
-}
+
 
 void errorLexema(int linea,char *lexema){
     printf("Error en la linea %d: lexema %s no reconocido\n",linea,lexema);

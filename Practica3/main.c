@@ -2,9 +2,7 @@
 
 
 #include "TablaSimbolos.h"
-#include "lex.yy.h"
 #include "errores.h"
-#include "bison.tab.h"
 #include "calculadora.h"
 
 
@@ -14,10 +12,11 @@ int main(int argc, char **argv) {
 
     //Se inicializa la tabla de símbolos
     inicializarTablaSimbolos(); //Se inicializa la tabla de símbolos
-    verTabla(); //Se muestra la tabla
 
+    //Se comprueba si se ha pasado un argumento
+    //Si se ha pasado un argumento se ejecuta el fichero indicado
     if (argc == 2) {
-        iniciar(argv[1]);
+        iniciar(argv[1]); //Función dispnible en calculadora.c, que
     } else if(argc==1) {
         iniciar(NULL);
     }else{
@@ -26,13 +25,6 @@ int main(int argc, char **argv) {
     }
 
 
-    //SE libera la memoria
-    /*
-    liberarLexema();//Se libera el lexema cuando se acaba de usar
-    liberarAnalizadorLexico(); */
-
-    //Se liberan los recursos
-    liberarTablaSimbolos();
 
 
     return EXIT_SUCCESS;

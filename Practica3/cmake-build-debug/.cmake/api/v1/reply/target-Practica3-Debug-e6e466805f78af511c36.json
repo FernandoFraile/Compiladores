@@ -113,6 +113,13 @@
 				6,
 				7
 			]
+		},
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				8
+			]
 		}
 	],
 	"sources" : 
@@ -164,6 +171,11 @@
 			"compileGroupIndex" : 0,
 			"path" : "miLibreria.c",
 			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "miLibreria.h",
+			"sourceGroupIndex" : 1
 		}
 	],
 	"type" : "EXECUTABLE"

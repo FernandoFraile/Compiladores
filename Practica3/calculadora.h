@@ -6,14 +6,7 @@
 
 /*Archivo cabecera de la calculadora implementada*/
 
-/*
-extern char **libDinamicas; //Variable para almacenar las librerias dinamicas
-//Se guardan en una cadena de caracteres para poder buscarlas posteriormente.
-//El proposito de esto es que la Tabla de simbolos es una tabla hash, por lo que para buscarlas
-//es mejor tener un array auxiliar, que recorrer toda la tabla hash hasta encontrarlas.
-//Ademas, asi permitiría invocar a una función de la librería sin tener que indicar el nombre de la librería,
-//comprobando si la funcion existe en todas las librerias cargadas.
-*/
+
 void iniciar(char *argv); //Funcion para inicializar la calculadora
 
 void cargarFichero(char *argv); //Funcion para cargar el fichero
@@ -26,7 +19,11 @@ void workSpace(); //Funcion para mostrar el workspace de las variables
 
 void eliminarWorkspace(); //Funcion para eliminar el workspace de las variables
 
+void eliminarVariable(char *var); //Funcion para eliminar una variable del workspace
+
 void importarLibreria(char *lib); //Funcion para importar una libreria dinamicamente
+
+void cerrarLibreria(char *lib); //Funcion para cerrar una libreria que se ha abierto dinamicamente
 
 
 

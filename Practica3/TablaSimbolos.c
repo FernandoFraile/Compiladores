@@ -61,9 +61,15 @@ void inicializarTablaSimbolos(){
 
     fclose(fp);
 
+
     //Se añaden tambien las constantes pi y e
     LEX.clave = strdup("pi");
     LEX.valor = CONSTANTE;
+    LEX.variable = 3.14159265358979323846;
+    InsertarHash(Tabla,LEX);
+    _liberarMemoria(&LEX);
+
+    LEX.clave = strdup("Pi");
     LEX.variable = 3.14159265358979323846;
     InsertarHash(Tabla,LEX);
     _liberarMemoria(&LEX);
@@ -101,16 +107,28 @@ void inicializarTablaSimbolos(){
     _liberarMemoria(&LEX);
 
 
-    LEX.clave = strdup("borrarWorkSpace");
+    LEX.clave = strdup("eliminarWorkspace");
     LEX.funcion = eliminarWorkspace; //Se guarda la direccion de la funcion
     InsertarHash(Tabla,LEX);
     _liberarMemoria(&LEX);
+
+
 
     LEX.clave = strdup("import");
     LEX.funcion =  importarLibreria; //Se guarda la direccion de la funcion
     InsertarHash(Tabla,LEX);
     _liberarMemoria(&LEX);
 
+    LEX.clave = strdup("cerrarLibreria");
+    LEX.funcion =  cerrarLibreria; //Se guarda la direccion de la funcion
+    InsertarHash(Tabla,LEX);
+    _liberarMemoria(&LEX);
+
+    LEX.clave = strdup("eliminarVariable");
+    LEX.valor = ELIM; //No es lo mismo que COMANDO, ya que se va a tratar distinto en bison. Se diferencia este caso para evitar errores.
+    LEX.funcion = eliminarVariable; //Se guarda la direccion de la funcion
+    InsertarHash(Tabla,LEX);
+    _liberarMemoria(&LEX);
 
 
 
@@ -172,12 +190,15 @@ void eliminarVariables(){
         CompLexico aux = Tabla[i];
         if(aux.valor==VAR){
             clave = strdup(aux.clave);
-            BorrarHash(Tabla,clave);
+            BorrarHash(Tabla,clave); //Se elimina de la tabla Hash
             free(clave);
         }
 
     }
-    verTabla();
+}
+
+void eliminarVar(char *var){
+    BorrarHash(Tabla,var);
 }
 
 
@@ -186,23 +207,30 @@ int funcionLibDinamica(char *funcion){
     //Al principio es más costoso computacionalmente, pero luego como se incluye la función en la tabla, el usuario
     //puede acceder directamente a ella.
     CompLexico introducirFunc; //Para introducir la función en la tabla de símboloss
+    void (*fptr)(void ); //Para guardar la direccion de la funcion
+
     bool flag = false; //Para controlar el bluce
     int i=0;
     while(i<TAMTAB && flag==false) {
         CompLexico aux = Tabla[i];
         if(aux.valor==LIBRERIA){
-            void (*fptr)(void);
             *(void **)(&fptr) = dlsym(aux.libreria,funcion); //Para guardar la direccion de la funcion
             introducirFunc.clave = funcion;
             introducirFunc.valor = FUNCION;
-            introducirFunc.funcion =   fptr;
+            if(fptr!=NULL){
+                introducirFunc.funcion = fptr;
+                flag = true;
 
-                //Primero se comprueba si ya estaba
+            }
+            else{
+                errorSistema("No se ha encontrado la funcion en ninguna libreria cargada dinamicamente\n");
+            }
+
+            //Primero se comprueba si ya estaba
             if(buscarTabla(&introducirFunc)==0){
                 //Si no está se inserta en la tabla de símbolos.
                 InsertarHash(Tabla,introducirFunc);
             }
-            flag = true;
 
         }
         i++;
@@ -218,6 +246,69 @@ int funcionLibDinamica(char *funcion){
 
 
 
+}
+
+//Funcion privada para obtener el componente lexico que tiene la librería
+CompLexico _obtenerLibreria(char *lib){
+    CompLexico aux;
+    aux.libreria = NULL;
+    aux.clave = lib;
+    buscarTabla(&aux);
+    return aux;
+}
+
+void eliminarFuncionesLibreria(char *lib){
+    //Se recorre la tabla de Símbolos
+    CompLexico Complibreria; //Para guardar la librería
+    void (*fptr)(void ); //Para guardar la dirección de la función
+
+    for(int i=0; i<TAMTAB; i++){
+        CompLexico aux = Tabla[i];
+        if(aux.valor==FUNCION){
+            //Se comprueba si la función pertenece a la librería
+            //Para ello primero se obtiene la librería que se encuentra en la tabla de símbolos
+            Complibreria = _obtenerLibreria(lib);
+            //Se ve si la función está en la librería
+            *(void **)(&fptr) = dlsym(Complibreria.libreria,aux.clave);
+            if(fptr!=NULL){
+                //Se elimina la función de la tabla de símbolos
+                BorrarHash(Tabla,aux.clave);
+            }
+
+
+        }
+    }
+
+
+}
+
+void eliminarLibreria(char *lib){
+
+    CompLexico Complibreria = _obtenerLibreria(lib); //Se obtiene el componente lexico que contiene a la libreria
+    if(Complibreria.libreria==NULL){
+        errorSistema("La libreria no se ha cargado previamente\n");
+    }
+    else{
+        eliminarFuncionesLibreria(lib);
+        if(    dlclose(Complibreria.libreria)){
+            errorSistema(dlerror());
+        }
+        BorrarHash(Tabla,lib);
+    }
+
+
+}
+
+void eliminarTodasLibrerias(){
+    //Se recorre la tabla de símbolos
+    for(int i=0; i<TAMTAB; i++){
+        CompLexico aux = Tabla[i];
+        if(aux.valor==LIBRERIA){
+            //Se elimina la librería
+            eliminarLibreria(aux.clave);
+        }
+    }
+    
 }
 
 

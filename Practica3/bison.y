@@ -25,7 +25,7 @@ void yyerror (char *s);
 }
 
 %token <variable> NUMERO;
-%token <cadena> VAR CONSTANTE COMANDO FICHERO LIBRERIA FUNCION;
+%token <cadena> VAR CONSTANTE COMANDO FICHERO LIBRERIA FUNCION ELIM;
 %token <cadena> SIN COS TAN LOG SQRT EXP;
 %type <variable> exp igualdad lib;
 
@@ -47,14 +47,14 @@ void yyerror (char *s);
 
 %%
 input: /* cadena vacia */
-    | input line
+    | input line { if(fichero==false){ printf(">>");} }
 ;
 line: '\n'
     | lib '\n'
-    | lib ';' '\n'
-    | exp ';' '\n' { if(!err) printf("%lf \n", $1);}
-    | exp '\n' { if(!err) printf("%lf \n", $1);}
-    | igualdad ';' '\n'
+    | lib ';' '\n' { if(err==false && fichero==false){ printf("%lf \n", $1);} err = false;}
+    | exp ';' '\n' { if(err==false){ printf(">>%lf \n", $1);} err = false;}
+    | exp '\n'
+    | igualdad ';' '\n' { if(err==false && fichero==false){ printf("%lf \n", $1);} err = false;}
     | igualdad '\n'
     | comando ';' '\n'
     | comando '\n'
@@ -105,40 +105,102 @@ exp: NUMERO
 
 
 igualdad: VAR '=' exp {
-                        Complex.clave = $1;
-                        Complex.variable = $3;
-                        Complex.valor = VAR;
-                        if(buscarTabla(&Complex)){
+                        if(isnan($3)){
+                            errorSistema("No se puede asignar un valor no numerico\n");
+                        }
+                        else{
+                            Complex.clave = $1;
                             Complex.variable = $3;
-                            modificarElementoTabla(Complex);
-                        }else{
-                            insertarTabla(&Complex);
+                            Complex.valor = VAR;
+                            if(buscarTabla(&Complex)){
+                                Complex.variable = $3;
+                                modificarElementoTabla(Complex);
+                            }else{
+                                insertarTabla(&Complex);
 
+                            }
+
+                            $$ = $3;
+                            if(fichero) printf("%s = %lf\n", $1, $3);
                         }
 
-                        $$ = $3;
-                        if(fichero) printf("%s = %lf\n", $1, $3);
                         free($1);
                     }
+            | VAR '=' lib{
+
+                        if(isnan($3)){
+                            errorSistema("No se puede asignar un valor no numerico\n");
+                        }
+                        else{
+                            Complex.clave = $1;
+                            Complex.variable = $3;
+                            Complex.valor = VAR;
+                            if(buscarTabla(&Complex)){
+                                Complex.variable = $3;
+                                modificarElementoTabla(Complex);
+                            }else{
+                                insertarTabla(&Complex);
+
+                            }
+                            $$ = $3;
+                            if(fichero) printf("%s = %lf\n", $1, $3);
+                        }
+                        free($1);
+            }
+            | CONSTANTE '=' exp {
+                errorSistema("No se puede modificar una constante\n");
+                err = true;
+            }
+
 
 ;
 
 comando: COMANDO {
             Complex.clave = $1;
             buscarTabla(&Complex);
-            FuncPtr func=Complex.funcion;
-            free($1);
-            func();
+            if((strcmp(Complex.clave, "import") == 0) || (strcmp(Complex.clave, "cargarFichero") == 0)
+                ||  (strcmp(Complex.clave, "cerrarLibreria") == 0)){
+                errorSistema("Debe indicarse un argumento para la funcion\n");
+                free($1);
+
+            }
+            else{
+                FuncPtr func=Complex.funcion;
+                free($1);
+
+                func();
+            }
+
+
+
 
           }
 
         | COMANDO '(' ')' {
               Complex.clave = $1;
-              buscarTabla(&Complex);
-              FuncPtr func=Complex.funcion;
-              free($1);
+              if( buscarTabla(&Complex)){
 
-              func();
+                if( (strcmp(Complex.clave, "import") == 0) || (strcmp(Complex.clave, "cargarFichero") == 0)
+                     ||  (strcmp(Complex.clave, "cerrarLibreria") == 0)){
+                        errorSistema("Debe indicarse un argumento para la funcion\n");
+                        free($1);
+
+                    }
+                else {
+                    FuncPtr func=Complex.funcion;
+
+                    if(func!=NULL){
+                        free($1);
+                        func();
+                    }
+                }
+              }else{
+                  free($1);
+
+                 errorSistema("Error interno\n");
+
+              }
+
 
             }
 
@@ -148,9 +210,6 @@ comando: COMANDO {
                       FuncPtr func=Complex.funcion;
                       free($1);
                       func($3);
-                      free($3);
-
-
 
         }
 
@@ -163,14 +222,45 @@ comando: COMANDO {
                       free($3);
 
                       }
-        | COMANDO '(' exp ')'{
-                 Complex.clave = $1;
+        | COMANDO '(' VAR ')'{
+                  Complex.clave = $1;
                   if(buscarTabla(&Complex)){
                         FuncPtr func=Complex.funcion;
                         free($1);
                         func($3);
+                        free($3);
 
                   }
+        }
+        | COMANDO '(' CONSTANTE ')'{
+            free($1);
+            free($3);
+            errorSistema("No se puede invocar a la funcion pedida con una constante\n");
+
+        }
+
+        | ELIM '('  ')' {
+                errorSistema("Debe indicarse una variable para eliminar\n");
+        }
+        | ELIM '(' VAR ')' {
+              Complex.clave = $3;
+              CompLexico aux;
+              if(buscarTabla(&Complex)){
+
+                    aux.clave = $1;
+                    buscarTabla(&aux);
+                    FuncPtr func=aux.funcion;
+                    free($1);
+                    func($3);
+                    free($3);
+
+              }
+              else{
+                  free($3);
+                  free($1);
+                  errorSistema("No se ha encontrado la variable indicada\n");
+
+              }
         }
 
 ;
@@ -178,16 +268,58 @@ comando: COMANDO {
 lib: VAR '(' exp ')' {
 
                 if(funcionLibDinamica($1)){
+                    Complex.clave = $1;
                     buscarTabla(&Complex);
-                    FuncPtr func=Complex.funcion;
                     free($1);
-                    printf("%f\n",$3);
-                    printf("%f\n",func($3));
+                    double (*func)(double) = (double (*)(double))Complex.funcion;
+                    double result = (*func)((double)$3);
+                    $$ = result;
+
+                }
+                else{
+                    free($1);
+
+                     errorSistema("No se ha encontrado la funcion indicada\n");
 
                 }
     }
+    | VAR '('  ')' {
+            if(funcionLibDinamica($1)){
+                Complex.clave = $1;
+                buscarTabla(&Complex);
+                free($1);
+                FuncPtr func=Complex.funcion;
+                func();
+
+            }
+             else{
+                 free($1);
+
+                 errorSistema("No se ha encontrado la funcion indicada\n");
+
+            }
+    }
+    | FUNCION '(' exp ')' {
+            Complex.clave = $1;
+            if(buscarTabla(&Complex)){
+                    free($1);
+                    double (*func)(double) = (double (*)(double))Complex.funcion;
+                    double result = (*func)((double)$3);
+                    $$ = result;
+            }
+
+    }
+
+    | FUNCION '(' ')' {
+                Complex.clave = $1;
+                if( buscarTabla(&Complex)){
+                    free($1);
+                    FuncPtr func=Complex.funcion;
+                    func();
+                }
 
 
+    }
 
 
 ;
@@ -209,6 +341,8 @@ void yyerror(char *s) {
 void ejecutarFichero(bool opcion){
     fichero = opcion;
 }
+
+
 
 
 

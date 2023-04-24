@@ -20,7 +20,52 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cbc495ad-2924-416d-951e-42d545856804" name="Changes" comment="" />
+    <list default="true" id="cbc495ad-2924-416d-951e-42d545856804" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/miLibreria.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TablaSimbolos.c" beforeDir="false" afterPath="$PROJECT_DIR$/TablaSimbolos.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TablaSimbolos.h" beforeDir="false" afterPath="$PROJECT_DIR$/TablaSimbolos.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TablaSimbolos.o" beforeDir="false" afterPath="$PROJECT_DIR$/TablaSimbolos.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bison.tab.c" beforeDir="false" afterPath="$PROJECT_DIR$/bison.tab.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bison.tab.h" beforeDir="false" afterPath="$PROJECT_DIR$/bison.tab.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bison.tab.o" beforeDir="false" afterPath="$PROJECT_DIR$/bison.tab.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bison.y" beforeDir="false" afterPath="$PROJECT_DIR$/bison.y" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calculadora.c" beforeDir="false" afterPath="$PROJECT_DIR$/calculadora.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calculadora.h" beforeDir="false" afterPath="$PROJECT_DIR$/calculadora.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calculadora.o" beforeDir="false" afterPath="$PROJECT_DIR$/calculadora.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/cmakeFiles-v1-70fa511d76652fbfbbb6.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/codemodel-v2-5a057540e1a71686c0ad.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/index-2023-04-18T07-25-38-0784.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/target-Practica3-Debug-dd4d04c179757b567129.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Practica3.dir/TablaSimbolos.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Practica3.dir/TablaSimbolos.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Practica3.dir/bison.tab.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Practica3.dir/bison.tab.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Practica3.dir/calculadora.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Practica3.dir/calculadora.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Practica3.dir/errores.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Practica3.dir/errores.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Practica3.dir/lex.yy.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Practica3.dir/lex.yy.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Practica3.dir/main.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Practica3.dir/main.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Practica3.dir/miLibreria.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Practica3.dir/miLibreria.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-Debug-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-Debug-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Practica3" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Practica3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/build.ninja" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/build.ninja" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/entrada.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/entrada.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ejecutable" beforeDir="false" afterPath="$PROJECT_DIR$/ejecutable" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/entrada.txt" beforeDir="false" afterPath="$PROJECT_DIR$/entrada.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/errores.c" beforeDir="false" afterPath="$PROJECT_DIR$/errores.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/errores.h" beforeDir="false" afterPath="$PROJECT_DIR$/errores.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/errores.o" beforeDir="false" afterPath="$PROJECT_DIR$/errores.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flex.l" beforeDir="false" afterPath="$PROJECT_DIR$/flex.l" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex.yy.c" beforeDir="false" afterPath="$PROJECT_DIR$/lex.yy.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex.yy.o" beforeDir="false" afterPath="$PROJECT_DIR$/lex.yy.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main" beforeDir="false" afterPath="$PROJECT_DIR$/main" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.o" beforeDir="false" afterPath="$PROJECT_DIR$/main.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/miLibreria.c" beforeDir="false" afterPath="$PROJECT_DIR$/miLibreria.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/miLibreria.so" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -110,11 +155,36 @@
       <workItem from="1681837319461" duration="613000" />
       <workItem from="1681910192534" duration="1788000" />
       <workItem from="1681914636712" duration="5753000" />
-      <workItem from="1682006212522" duration="318000" />
+      <workItem from="1682006212522" duration="565000" />
+      <workItem from="1682082703662" duration="13428000" />
+      <workItem from="1682176881917" duration="3883000" />
+      <workItem from="1682237432565" duration="1185000" />
+      <workItem from="1682239002230" duration="321000" />
+      <workItem from="1682239640857" duration="5235000" />
+      <workItem from="1682248844211" duration="1556000" />
+      <workItem from="1682260749379" duration="3183000" />
+      <workItem from="1682343774101" duration="8468000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/bison.tab.c</url>
+          <line>1593</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="CMakeRunConfiguration">
+        <watch expression="func" language="Bison" />
+        <watch expression="result" language="Bison" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

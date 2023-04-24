@@ -9,9 +9,6 @@ void errorLexicoTamanho(int linea,char *palabra);
 
 void errorLexicoComentario(int linea,char *tipo);
 
-//Gestion de errores por strings mal formados
-void errorLexicoString(int linea,char *frase);
-
 //Error para lexemas no reconocidos
 void errorLexema(int linea,char *lexema);
 

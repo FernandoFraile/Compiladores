@@ -61,13 +61,14 @@ extern int yydebug;
     FICHERO = 262,                 /* FICHERO  */
     LIBRERIA = 263,                /* LIBRERIA  */
     FUNCION = 264,                 /* FUNCION  */
-    SIN = 265,                     /* SIN  */
-    COS = 266,                     /* COS  */
-    TAN = 267,                     /* TAN  */
-    LOG = 268,                     /* LOG  */
-    SQRT = 269,                    /* SQRT  */
-    EXP = 270,                     /* EXP  */
-    NEG = 271                      /* NEG  */
+    ELIM = 265,                    /* ELIM  */
+    SIN = 266,                     /* SIN  */
+    COS = 267,                     /* COS  */
+    TAN = 268,                     /* TAN  */
+    LOG = 269,                     /* LOG  */
+    SQRT = 270,                    /* SQRT  */
+    EXP = 271,                     /* EXP  */
+    NEG = 272                      /* NEG  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -81,7 +82,7 @@ union YYSTYPE
     double variable;
     char *cadena;
 
-#line 85 "bison.tab.h"
+#line 86 "bison.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -96,5 +97,6 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 void ejecutarFichero(bool opcion); //Funcion para indicarle que está ejecutando el fichero o no
+
 
 #endif /* !YY_YY_BISON_TAB_H_INCLUDED  */
